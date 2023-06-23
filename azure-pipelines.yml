@@ -1,0 +1,104 @@
+trigger:
+- feature-dev-seedui
+#- dev-blcloud-seedui
+
+pool:
+   vmImage: ubuntu-latest
+
+steps:
+    
+- task: NodeTool@0
+  inputs:
+     versionSpec: '14.x'
+  displayName: 'Install Node.js'
+
+- task: DownloadSecureFile@1
+  name: authKey
+  inputs:
+    secureFile: 'auth-key.txt'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm Install and Build'
+
+- script: |
+    CI=true npm test 
+  displayName: 'npm run test'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+     PathtoPublish: '$(System.DefaultWorkingDirectory)/dist/'
+     ArtifactName: 'drop'
+     publishLocation: 'Container'
+
+# Publish UniversalPackage
+- task: UniversalPackages@0
+  displayName: Universal Publish derms_blcloud_seedui
+  inputs:
+      command: publish
+      publishDirectory: '$(System.DefaultWorkingDirectory)/dist/'
+      feedsToUsePublish: 'internal'
+      vstsFeedPublish: 'DERMS/derms_blcloud_seedui'
+      vstsFeedPackagePublish: 'seed_app_authorization'
+      versionOption: patch
+      packagePublishDescription: 'derms_blcloudseedui'    
+
+- task: SynopsysDetectTask@8
+  inputs:
+    BlackDuckService: 'BlackDuckDermsSeedUISC'
+    DetectArguments: '--detect.project.name=DERMSCoe-AEPCloudSeedUI --detect.project.version.name=1.0 --detect.detector.search.depth=1 --detect.source.path=$(System.DefaultWorkingDirectory)'
+    DetectVersion: 'latest'
+  displayName: BlackDuck
+
+# Download & Install coverity tools 
+- script: |
+          set -o xtrace
+          cd $(Agent.BuildDirectory)
+          mkdir cov-analysis && cd cov-analysis
+          # Download the license file
+          curl -s -L --user $(username):$(authKey) -o license.dat https://coverity.eaton.com/downloadFile.htm?fn=license.dat
+          # Download the install file
+          curl -s -L --user $(username):$(authKey) -o cov-analysis-linux64-2021.12.2.sh https://coverity.eaton.com/downloadFile.htm?fn=cov-analysis-linux64-2021.12.2.sh
+          # Set the right & Install the Coverity analyzes in silent mode using -q
+          chmod 744 cov-analysis-linux64-2021.12.2.sh
+          ./cov-analysis-linux64-2021.12.2.sh -q \
+          --installation.dir=cov-analysis-linux64 \
+          --license.region=0 \
+          --license.agreement=agree \
+          --license.type.choice=0 \
+          --license.cov.path=$(Agent.BuildDirectory)/cov-analysis/license.dat           
+  displayName: Install coverity tools
+
+# Execute coverity commands
+- script: |
+          # Configure the languages
+          $(Agent.BuildDirectory)/cov-analysis/cov-analysis-linux64/bin/cov-configure --javascript
+          chmod 600 $(authKey.secureFilePath)
+          $(Agent.BuildDirectory)/cov-analysis/cov-analysis-linux64/bin/cov-build --dir $(Build.SourcesDirectory)/idir --no-command --fs-capture-search  $(Build.SourcesDirectory) npm run build
+          $(Agent.BuildDirectory)/cov-analysis/cov-analysis-linux64/bin/cov-analyze --dir $(Build.SourcesDirectory)/idir --all
+          $(Agent.BuildDirectory)/cov-analysis/cov-analysis-linux64/bin/cov-commit-defects --dir $(Build.SourcesDirectory)/idir --url "https://coverity.eaton.com/" --auth-key-file $(authKey.secureFilePath) --stream DERMSCoE-AEPCloudSeedUI       
+  displayName: Execute coverity commands
+
+# - powershell: |
+#       echo Write your commands here
+      
+#       echo Hello world
+#       dir idir\output
+#       type idir\output\summary.txt
+#       echo ---------------
+#       Get-Content idir\output\summary.txt | Select -Index 12
+#       echo --------------
+#       $string= Get-Content idir\output\summary.txt | Select -Index 12
+#       echo string
+#       echo  $string
+#       $string1=$string -replace "[^0-9]" , ''
+#       echo string1
+#       echo Coverity OutStanding issue is $string1 
+#       $outstandingissue = $string1 
+#       $threshold = 0
+#       $outstandingissue = $outstandingissue -as [int]
+#       $outstandingissue -is "Int" -and $threshold -is "Int"
+#       $EXITCODE = 1
+#       If($threshold -lt $outstandingissue) { exit $EXITCODE } else { write-host "Coverity OutStanding issue is 0" }
+#   displayName: 'Validate Coverity'
