@@ -33,6 +33,7 @@ jobs:
       - run: npm run build
       - run: |
             cp package.json ./dist
+            npm version patch
             npm publish ./dist
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
