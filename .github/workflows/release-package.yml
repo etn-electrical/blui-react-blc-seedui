@@ -32,9 +32,7 @@ jobs:
       - run: npm install --legacy-peer-deps
       - run: npm run build
       - run: |
-            git stash 
             npm version patch
-            git stash pop
             cp package.json ./dist
             npm publish ./dist
         env:
