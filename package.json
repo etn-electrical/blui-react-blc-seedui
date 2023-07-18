@@ -49,7 +49,7 @@
     "lint:fix": "eslint \"src/**/**.ts\" --fix",
     "prettier": "prettier \"src/**/**.{ts,tsx,js,jsx,json,css,scss,html}\" --write",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
-    "pub": "npm config set force false && npm config get force && npm version patch --force && npm publish"
+    "pub": "npm version patch --force && npm publish"
   },
   "publishConfig": {
     "@etn-electrical:registry": "https://npm.pkg.github.com"
