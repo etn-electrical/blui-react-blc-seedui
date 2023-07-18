@@ -48,7 +48,8 @@
     "lint": "eslint \"src/**/**.ts\"",
     "lint:fix": "eslint \"src/**/**.ts\" --fix",
     "prettier": "prettier \"src/**/**.{ts,tsx,js,jsx,json,css,scss,html}\" --write",
-    "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage"
+    "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
+    "pub": "npm version patch --force && npm publish"
   },
   "publishConfig": {
     "@etn-electrical:registry": "https://npm.pkg.github.com"
