@@ -32,7 +32,7 @@ jobs:
       - run: npm install --legacy-peer-deps
       - run: npm run build
       - run: |
-            npm --no-git-tag-version version patch
+            grunt bump:patch
             cp package.json ./dist
             npm publish ./dist
         env:
