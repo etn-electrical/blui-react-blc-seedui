@@ -49,7 +49,8 @@
     "lint:fix": "eslint \"src/**/**.ts\" --fix",
     "prettier": "prettier \"src/**/**.{ts,tsx,js,jsx,json,css,scss,html}\" --write",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
-    "pub": "npm version patch --force && npm publish"
+    "ig": "npm install -g @jsdevtools/version-bump-prompt",
+    "bp": "bump patch"
   },
   "publishConfig": {
     "@etn-electrical:registry": "https://npm.pkg.github.com"
