@@ -71,11 +71,29 @@ export const NewOrgDivider = (theme: Theme): SxProps<Theme> => ({
 });
 
 
-
 export const StateInputField = (theme: Theme): SxProps<Theme> => ({
     width: '48%',
      margin: "24px 10px 0px 0px",
      '& .MuiFormLabel-root': {
         fontFamily: 'Open Sans'
     }
+});
+
+export const ReturnButtonStyles = (): SxProps<Theme> => ({
+    width: '95%',
+    margin: '20px 0px',
+    fontFamily: 'Open Sans',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '14px',
+    display: 'flex',
+    textTransform: 'none',
+    flex: 'none',
+    order: 0,
+    flexGrow: 0,
+    '& .Mui-disabled': {
+        backgroundColor: '#e0eef8',
+        color: '#80bde0'
+    },
+    height: '36px'
 });

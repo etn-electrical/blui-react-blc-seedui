@@ -156,7 +156,7 @@ export const RoleLocation: React.FC<React.PropsWithChildren<RoleLocationProps>> 
     return (
         <>
             {access.map((item: RoleSiteSelection, index: number) =>
-                <Box sx={RoleLocationContainer(theme)}>
+                <Box sx={RoleLocationContainer(theme)} key={index}>
                     <AutoComplete
                         required
                         id={`Role`}

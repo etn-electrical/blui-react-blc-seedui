@@ -1,6 +1,6 @@
 {
   "name": "@etn-electrical/derms-blcloud-react-seedui",
-  "version": "",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "dependencies": {
     "@babel/cli": "^7.19.3",

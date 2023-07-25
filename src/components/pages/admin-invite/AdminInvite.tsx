@@ -146,7 +146,7 @@ export const AdminInvite: React.FC = () => {
             />
             <ContainerComponent loading={loading}>
                 <CustomizedSnackbar
-                    open={inviteSuccess.message.length}
+                    open={!!inviteSuccess.message.length}
                     message={inviteSuccess.message}
                     removeToast={(event: Event) => setInviteSuccess({ message: '' })} />
                 <CardHeader

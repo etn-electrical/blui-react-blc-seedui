@@ -45,7 +45,7 @@ export const LocationSiteSelection: React.FC<React.PropsWithChildren<LocationSit
                         icon={icon}
                         checkedIcon={checkedIcon}
                         style={{ marginRight: 8 }}
-                        checked={option.id === "select-all" ? value.length && options.length === value.length : selected}
+                        checked={option.id === "select-all" ? !!(value.length && options.length === value.length) : !!selected}
                     />
                     {option.name}
                 </li>

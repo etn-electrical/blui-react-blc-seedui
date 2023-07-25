@@ -96,7 +96,7 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
     return (
         <BrandedCardContainer loading={loading}>
             <CustomizedSnackbar
-                open={loginSuccess.message.length}
+                open={!!loginSuccess.message.length}
                 message={loginSuccess.message}
                 removeToast={(event: Event) => setLoginSuccess({ message: '' })} />
             <form onSubmit={(evt): void => { evt.preventDefault(); loginTapped() }}>
