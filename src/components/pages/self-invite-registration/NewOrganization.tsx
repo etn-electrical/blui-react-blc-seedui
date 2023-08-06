@@ -1,7 +1,9 @@
 import React from 'react';
-import { TextField, Divider, Typography } from '@mui/material';
-
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+
 import { NewOrgDivider, TextFieldStyles } from '../self-invite/SelfRegistrationStyle';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';
 

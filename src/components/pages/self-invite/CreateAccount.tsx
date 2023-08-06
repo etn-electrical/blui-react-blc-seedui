@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import {Typography, TextField, Divider} from '@mui/material';
-import { FullDividerStyles, TextFieldStyles } from './SelfRegistrationStyle';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
+
+import { FullDividerStyles, TextFieldStyles } from './SelfRegistrationStyle';
 import { isValidEmail } from '../../../utils/common';
 import { CreateAccountProps } from '../../../types/selfinvite-types';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';

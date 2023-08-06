@@ -1,8 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
-import { Checkbox, FormControlLabel, Grid, Typography, Button, Box } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
-
 import { useTheme } from '@mui/material/styles';
+
 import { BrandedCardContainer } from '../../common/cardContainer/BrandedCardContainer';
 import { TextField } from '../../common/textField/TextField';
 import cyberBadge from '../../../assets/cybersecurity_certified.png';

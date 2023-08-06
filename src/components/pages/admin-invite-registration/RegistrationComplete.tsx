@@ -1,5 +1,8 @@
 import React from 'react';
-import { Box, Typography, List, ListItem } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useTheme } from '@mui/material/styles';
 
@@ -28,8 +31,8 @@ export const RegistrationComplete: React.FC<
 
             <List sx={{ listStyleType: 'disc', pl: 5 }}>
                 {
-                    Object.keys(roleSiteList).map(key => (
-                        <Typography variant="subtitle2" color={'textSecondary'}>
+                    Object.keys(roleSiteList).map((key, index) => (
+                        <Typography variant="subtitle2" color={'textSecondary'} key={index}>
                             <ListItem sx={{ display: 'list-item', padding: '4px 4px' }}> {key}{roleSiteList[key].length ? ':' : ''} {roleSiteList[key].join(", ")}
                             </ListItem></Typography>
                     ))

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Typography, Box, Button } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import DomainIcon from '@mui/icons-material/Domain';
 

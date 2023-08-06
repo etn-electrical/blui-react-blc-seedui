@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, ChangeEvent, useCallback } from 'react';
-import { Typography, Divider } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 
 import { SecureTextField } from '../../common/secureTextField/SecureTextField';

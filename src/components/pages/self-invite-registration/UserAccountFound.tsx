@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, Box} from '@mui/material';
-
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { RegCompleteContainerStyles, OrgTxtStyles } from './SelfRegistrationStyle';
 import { RegContainerStyles } from '../../../styles/RegistrationStyle';

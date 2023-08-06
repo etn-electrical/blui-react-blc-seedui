@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
-import { Typography, Box, TextField, Divider } from '@mui/material';
-import { Country, State } from 'country-state-city';
-
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
+
+import { getAllCountries, getStatesOfCountry } from  '../../../utils/common';
 import { TextFieldStyles, StateInputField } from '../self-invite/SelfRegistrationStyle';
 import { AccDividerStyles } from './SelfRegistrationStyle';
 import { AutoComplete } from '../../common/autocomplete/AutoComplete';
@@ -29,11 +32,11 @@ export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = 
 
 
     const countryList = useMemo(() => {
-        const countryOption = Country.getAllCountries()
+        const countryOption = getAllCountries()
         return countryOption.map(item => ({ name: item.name, id: item.isoCode }))
     }, [])
     const stateList = useMemo(() => {
-        const stateOption = State.getStatesOfCountry(country.id)
+        const stateOption = getStatesOfCountry(country.id)
         return stateOption.map(item => ({ name: item.name, id: item.name }))
     }, [country])
 
@@ -124,6 +127,7 @@ export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = 
                     }}
                     sx={TextFieldStyles(theme)}
                     disableClearable={true}
+                    isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
                 />
             </>
         </>

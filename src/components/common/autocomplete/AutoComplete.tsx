@@ -22,10 +22,11 @@ type AutoCompleteProps = {
     required?: boolean;
     readOnly?: boolean;
     disableClearable?: boolean;
+    isOptionEqualToValue?: any;
 }
 export const AutoComplete: React.FC<React.PropsWithChildren<AutoCompleteProps>> = (props) => {
 
-    const { disableClearable = false, readOnly = false, required = false, multiple = false, sx, id, options, label, onValueSelect, value, optionDisabled, disabled = false } = props;
+    const { disableClearable = false, readOnly = false, required = false, multiple = false, sx, id, options, label, onValueSelect, value, optionDisabled, disabled = false, isOptionEqualToValue } = props;
     return (
         <MuiAutocomplete
             disableClearable={disableClearable}
@@ -42,6 +43,7 @@ export const AutoComplete: React.FC<React.PropsWithChildren<AutoCompleteProps>> 
             }}
             sx={sx}
             getOptionDisabled={optionDisabled}
+            isOptionEqualToValue={isOptionEqualToValue}
             renderInput={(params): JSX.Element => (
                 <MuiTextField
                     {...params}

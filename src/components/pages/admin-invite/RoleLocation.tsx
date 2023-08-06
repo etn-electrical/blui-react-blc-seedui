@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Delete from '@mui/icons-material/Delete';
+import Add from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material/styles';
 
 import { AutoComplete } from '../../common/autocomplete/AutoComplete';

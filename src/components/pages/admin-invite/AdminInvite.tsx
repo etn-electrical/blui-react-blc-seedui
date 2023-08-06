@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { CardContent, Divider, CardHeader, Box, Typography, Button as Muibtn, Snackbar, Tooltip, Alert as MuiAlert } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import HelpIcon from '@mui/icons-material/Help';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-import { Help as HelpIcon, CheckCircleOutline as CheckCircleOutlineIcon } from '@mui/icons-material';
-
 import { ContainerComponent } from '../../common/container/Container';
 import { TextField } from '../../common/textField/TextField';
 import { Button } from '../../common/button/Button';

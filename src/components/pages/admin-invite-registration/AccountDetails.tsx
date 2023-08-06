@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { TextField, Box, Typography, Divider } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 
 import { useTheme } from '@mui/material/styles';
 import { FullDividerStyles, TextFieldStyles } from './RegistrationStyle';
 import { AccountDetailsProps } from '../../../types/registration-types';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';
-
-
 
 export const AccountDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<AccountDetailsProps>>> = (
     props
