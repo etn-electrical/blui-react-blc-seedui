@@ -14,6 +14,8 @@ type AuthUIConfig = {
     adopterId: string;
     adopterApplicationName: string;
     applicationId: string;
+    inviteLimitation?: boolean;
+    inviteCount?: number;
 }
 type AuthUIContextProviderProps = {
     authUIConfig: AuthUIConfig,

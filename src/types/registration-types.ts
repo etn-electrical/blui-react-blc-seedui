@@ -34,3 +34,10 @@ export type RegistrationCompleteProps = {
     email: string;
     responseData: any;
 };
+
+export type RegistrationResponseSites = {
+    siteId: string;
+    siteName: string;
+    roles: Array<({roleName: string})>;
+    roleName: string;
+}

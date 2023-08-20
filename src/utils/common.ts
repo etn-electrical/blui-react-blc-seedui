@@ -1,16 +1,19 @@
 import { EMAIL_REGEX } from '../constants/registration-constants';
 import { UserRoles as UserRolesT } from '../context/AuthContextProvider/types';
 import { country, state } from '../constants/country-state';
+import { RegistrationResponseSites } from  '../types/registration-types';
+
+export type RoleSiteCollectionRessponseType = {
+    [key: string]: string[];
+}
 
 export const isValidEmail = (text: string): boolean => new RegExp(EMAIL_REGEX).test(text);
 
-export const roleSiteCollection = (sites: any) => {
+export const roleSiteCollection = (sites: RegistrationResponseSites[]): RoleSiteCollectionRessponseType => {
     const collection: any = {};
-    sites.map((site: any) => {
-        const { siteName, roles } = site;
-        roles.map((role: any) => {
-            collection[role.roleName] = collection[role.roleName] ? [...collection[role.roleName], siteName] : siteName ? [siteName] : []
-        })
+    sites.map((site: RegistrationResponseSites) => {
+        const { siteName, roleName } = site;
+            collection[roleName] = collection[roleName] ? [...collection[roleName], siteName] : siteName ? [siteName] : []
     })
     return collection;
 }

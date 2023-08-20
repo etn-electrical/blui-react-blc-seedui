@@ -14,7 +14,7 @@ export const AddingUser: React.FC<React.PropsWithChildren<any>> = (props: any) =
     const { advancePage, email, setEmail } = props;
 
     const { authUIConfig } = useInjectedUIContext();
-    const { inviteLimitation, inviteCount } = authUIConfig;
+    const { inviteLimitation = false, inviteCount } = authUIConfig;
 
     const [inviteSuccess, setInviteSuccess] = useState<{ message: string }>({ message: '' })
     const [loading, setLoading] = useState<boolean>(false);
@@ -22,8 +22,6 @@ export const AddingUser: React.FC<React.PropsWithChildren<any>> = (props: any) =
 
     const handleEmailInput = (value: string, blur?: boolean) => {
         const newEmail = value.trim().split(';').filter(email => email)
-        console.log(newEmail, value)
-
         const validateEmail = newEmail.filter(email => !isValidEmail(email))
         if (((newEmail.length === 1 && value.indexOf(';') != -1) || newEmail.length > 1 || blur) && !validateEmail.length) {
             setEmail([...email, ...newEmail]);
@@ -39,8 +37,6 @@ export const AddingUser: React.FC<React.PropsWithChildren<any>> = (props: any) =
     }
 
     const showEmailError = emailInput.length !== 0 && !isValidEmail(emailInput);
-
-    console.log('RRRRRRR', email.length)
 
     return (
         <>

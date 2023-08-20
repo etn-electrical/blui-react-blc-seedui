@@ -5,6 +5,8 @@ export const authConfig = {
 	"inviteRegistrationUrl": "/inviteregistration",
 	"selfRegistrationUrl": "/selfregistration",
 	"applicationId": "adasdad0asd098d09098as",
+	"inviteLimitation": true,
+	"inviteCount": 3,
 	"roles": {
 		"adopterAdmin": {
 			"roleId": "3d42846d-84df-4f7b-8b92-6cb46876bbfd",
