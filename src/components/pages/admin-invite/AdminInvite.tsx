@@ -1,206 +1,148 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { CardContent, Divider, CardHeader, Box, Typography, Button as Muibtn, Snackbar, Tooltip, Alert as MuiAlert } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import HelpIcon from '@mui/icons-material/Help';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-import { ContainerComponent } from '../../common/container/Container';
-import { TextField } from '../../common/textField/TextField';
-import { Button } from '../../common/button/Button';
-import { DialogTitleStyles, DialogContentStyles } from '../../../styles/RegistrationStyle';
-import { AdminInviteStyles, ToolTipIconStyles, FullDividerStyles, AlertStyles, TextFieldStyles, SubTitleStyles, ToolTipStyles } from './AdminInviteStyle';
-import { RoleLocation } from './RoleLocation';
-import { RoleSiteSelection, AdminRoleSiteOptions, RoleSiteSelectionList, LocationSiteProps } from '../../../types/admininvite-types';
+
+import { LocationSiteProps } from '../../../types/admininvite-types';
 import CustomizedSnackbar from '../../common/snackbar/Snackbar';
-import { getAdminInviteSite, postAdminInvite } from '../../../api/admin-invite-register';
-import { EMAIL_REGEX, ERROR_MSG } from '../../../constants/registration-constants';
-import { isValidEmail, sortRoles } from '../../../utils/common';
+import { postAdminInvite, getOrgList } from '../../../api/admin-invite-register';
+import { ERROR_MSG } from '../../../constants/registration-constants';
 import { LocalStorage } from '../../../utils/local-storage';
-import { UserRoles as UserRolesT } from '../../../context/AuthContextProvider/types';
-import { ConfirmModal } from '../../common/modal/ConfirmModal';
 import { rolesConfig } from '../../../config';
+import { AddingUser } from './AddingUser';
+import { GrantAccess } from './GrantAccess';
+import { AdminInviteSuccess } from './AdminInviteSuccess';
 
 export const AdminInvite: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState(0);
+    const [email, setEmail] = useState([]);
+
     const { authUIConfig } = useInjectedUIContext();
     const { adopterId, adopterApplicationName } = authUIConfig;
-    const { organizationId } = LocalStorage.getBaseConfig();
+    const { email: loginUserEmail } = LocalStorage.getRememberMe();
 
     const url = new URL(window.location.href);
-    const [emailInput, setEmailInput] = React.useState('');
-    const [access, setAccess] = useState<RoleSiteSelectionList>([{ roles: {} as AdminRoleSiteOptions, sites: [], isSiteVisible: false }])
-    const [siteDataList, setSiteDataList] = useState<any>([]);
-    const [locationDataList, setLocationDataList] = useState<any>([]);
-    const [inviteSuccess, setInviteSuccess] = useState<{ message: string }>({ message: '' })
+    const [orgDetailsList, setOrgDetailsList] = useState<any>();
+    const [accessList, setAccessList] = useState<any>({ orgList: [], locList: {}, siteList: {} })
     const [loading, setLoading] = useState<boolean>(false);
-    const [modalData, setModalData] = useState<any>({ isOpen: false, email: '' })
-    const [isopen, setIsOpen] = useState<boolean>(false);
-    const theme = useTheme();
+    const [inviteSuccess, setInviteSuccess] = useState<{ message: string }>({ message: '' })
 
     const loggedInUserData = useMemo(() => {
         const { roleId = '', token = '' } = LocalStorage.getAuthTocken();
         return { roleId, token };
     }, []);
 
-
-    const roleList = useMemo(() => {
-        const { adopterAdmin, userRoles } = rolesConfig.roles;
-        if (!loggedInUserData.roleId) return [];
-        if (adopterAdmin.id === loggedInUserData.roleId) return sortRoles([adopterAdmin, ...userRoles]);
-        const rolePos = userRoles.findIndex((item: UserRolesT) => item.id === loggedInUserData.roleId);
-        if (rolePos !== -1 && userRoles[rolePos].canRegisterUser) {
-            return sortRoles([...userRoles.slice(rolePos, userRoles.length)]);
-        }
-        return []
-    }, [rolesConfig])
-
-    const showEmailError = emailInput.length !== 0 && !isValidEmail(emailInput);
+    const advancePage = (delta = 0): void => {
+        setCurrentPage(currentPage + delta)
+    };
 
     useEffect(() => {
-        setEmailInput('');
+        getSiteList();
     }, [])
 
-    const getSiteAccessDetails = () => access.map((selection: RoleSiteSelection) => {
-        return {
-            roleId: selection.roles.id,
-            sites: selection.roles.entityType === 'organization' ? [{ siteId: organizationId }] : selection.sites.map((site: AdminRoleSiteOptions) => ({ siteId: site.id }))
+    useEffect(() => {
+        const orgList: any = [];
+        const locList: any = {};
+        const siteList: any = {};
+        if (orgDetailsList) {
+            orgDetailsList.map((org: any) => {
+
+                if (org.Sites.length) {
+                    org.Sites.map((loc: any) => {
+                        if (loc.Sites.length) {
+                            const sitesFilter = loc.Sites.filter((site: any) => site.canInviteUser)
+                            if (sitesFilter.length) siteList[loc.id] = sitesFilter;
+                        }
+                    })
+                    const locationFilter = org.Sites.filter((loc: any) => loc.canInviteUser || siteList[loc.id]);
+                    if (locationFilter.length) locList[org.id] = locationFilter;
+                }
+                if (locList[org.id] || org.canInviteUser) orgList.push(org);
+            })
+            setAccessList({ orgList, locList, siteList })
         }
-    })
+    }, [orgDetailsList])
 
-    const getSiteList = async (entityType: string) => {
-        const siteList: [LocationSiteProps] = await getAdminInviteSite({
-            body: {
-                adopterId,
-                organizationId,
-                entityType
-            }, token: loggedInUserData.token
-        }) as [LocationSiteProps];
-        return siteList;
-    }
-
-    const getSiteListDetails = async () => {
-        const [siteList, locationList] = await Promise.all([getSiteList('site'), getSiteList('location')])
-        const filteredList = siteList ? siteList.filter((site: LocationSiteProps) => site.canInviteUser) : [];
-        setSiteDataList(filteredList)
-        const filteredLocationList = locationList ? locationList.filter((location: LocationSiteProps) => location.canInviteUser) : [];
-        setLocationDataList(filteredLocationList)
-    }
-
-    const inviteUser = async () => {
+    const getSiteList = async () => {
         setLoading(true);
+        const siteList: [LocationSiteProps] = await getOrgList({
+            adopterId, token: loggedInUserData.token
+        }) as [LocationSiteProps];
+        setOrgDetailsList(siteList.slice(0, 100));
+        // setOrgDetailsList(siteList);
+
+        setLoading(false);
+    }
+
+    const getSiteAccessDetails = (dataList: any) => {
+        const { orgnizationData, locationData, siteData } = dataList;
+        const accessDetails: any = [];
+        orgnizationData.map((org: any) => {
+
+            if (org.roleAccess) {
+                accessDetails.push({ roleId: "561c019c-5d12-4e6e-99f7-154443a9f39b", roleName: org.roleAccess, sites: [{ siteId: org.id }] })
+            }
+            const findlocation = locationData[org.id] || [];
+            findlocation.map((loc: any) => {
+                if (loc.roleAccess && org.roleAccess !== loc.roleAccess) {
+                    accessDetails.push({ roleId: "561c019c-5d12-4e6e-99f7-154443a9f39b", roleName: loc.roleAccess, sites: [{ siteId: loc.id }] })
+                }
+
+                const findsite = siteData[loc.id] || [];
+                findsite.map((site: any) => {
+                    if (site.roleAccess && loc.roleAccess !== site.roleAccess) {
+                        accessDetails.push({ roleName: site.roleAccess, sites: [{ siteId: site.id }] })
+                    }
+                })
+            })
+        })
+        const newAccessDetailsObj: any = {};
+        accessDetails.map((item: any) => {
+            if (newAccessDetailsObj[item.roleName]) {
+                newAccessDetailsObj[item.roleName] = [...newAccessDetailsObj[item.roleName], ...item.sites]
+            } else {
+                newAccessDetailsObj[item.roleName] = item.sites;
+            }
+        })
+        const newAccessDetails = Object.keys(newAccessDetailsObj).map(key => ({ roleId: "561c019c-5d12-4e6e-99f7-154443a9f39b", roleName: key, sites: newAccessDetailsObj[key] }))
+        return newAccessDetails;
+    }
+
+    const inviteUser = async (data: any) => {
+        const { visibleData, setLoading, copyAccessType, rolesChanged, emailInput } = data;
+        setLoading(true);
+        const request = {
+            adopterId,
+            adopterApplicationName,
+            adopterApplicationRegistrationUrl: `${url.host}${rolesConfig.inviteRegistrationUrl}`,
+            usersToInvite: email.map(item => ({ emailId: item })),
+            myAccess: !rolesChanged && copyAccessType === 'My Access',
+            someOneElseAccess: !rolesChanged && copyAccessType === "Someone Else's Access",
+            accessEmailId: !rolesChanged && copyAccessType === 'My Access' ? loginUserEmail : emailInput,
+            siteAccessDetails: !rolesChanged ? [] : getSiteAccessDetails(visibleData)
+        }
         const response: any = await postAdminInvite({
-            body: {
-                adopterId,
-                adopterApplicationName,
-                adopterApplicationRegistrationUrl: `${url.host}${rolesConfig.inviteRegistrationUrl}`,
-                emailId: emailInput,
-                organizationId,
-                siteAccessDetails: getSiteAccessDetails()
-            },
+            body: request,
             token: loggedInUserData.token
         });
+        setLoading(false);
+
         if (response.status === 200) {
-            handleClose(true);
-        } else if (response.status === 409) {
-            setModalData({ isOpen: true, email: emailInput });
+            advancePage(1);
         } else {
             setInviteSuccess({ message: ERROR_MSG });
+
         }
-        setLoading(false);
-        setEmailInput('');
-        setAccess([{ roles: {} as any, sites: [], isSiteVisible: false }]);
-
     };
-
-    const canInvite = (): boolean => {
-        const selectedRoles = access.map((item: RoleSiteSelection) => item.roles.entityType);
-        const latestRoles = access[access.length - 1];
-
-        const result = EMAIL_REGEX.test(emailInput) && !!latestRoles.roles?.id &&
-            (selectedRoles.includes('admin') || selectedRoles.includes('organization') || !!latestRoles.sites.length)
-        return result;
-    };
-
-    const handleClose = (open: boolean) => {
-        setIsOpen(open);
-    };
-
-    const toastMessage = () => {
-        return (
-            <Snackbar open={isopen} autoHideDuration={5000} onClose={() => handleClose(false)} sx={AlertStyles(theme)}>
-                <MuiAlert onClose={() => handleClose(false)} severity="success" sx={{ width: '100%' }} icon={<CheckCircleOutlineIcon />}>
-                    Invite Sent
-                </MuiAlert>
-            </Snackbar>
-        )
-    }
-
 
     return (
         <>
-            <ConfirmModal
-                onClose={() => setModalData({ isOpen: false, email: '' })}
-                open={modalData.isOpen}
-                title={'Account already exists'}
-                content={`This email address already has an account with ${adopterApplicationName}. If you believe there is an error, please reach out to Brightlayerappsupport@eaton.com`}
-                actions={<Muibtn onClick={() => setModalData({ isOpen: false, email: '' })}>Ok</Muibtn>}
+            <CustomizedSnackbar
+                open={inviteSuccess.message.length}
+                message={inviteSuccess.message}
+                removeToast={(event: Event) => setInviteSuccess({ message: '' })}
             />
-            <ContainerComponent loading={loading}>
-                <CustomizedSnackbar
-                    open={!!inviteSuccess.message.length}
-                    message={inviteSuccess.message}
-                    removeToast={(event: Event) => setInviteSuccess({ message: '' })} />
-                <CardHeader
-                    title={<Typography variant={'h6'} sx={{ fontWeight: 600 }}> Add User to Organization</Typography>}
-                    sx={DialogTitleStyles(theme)}
-                />
-                <CardContent sx={DialogContentStyles(theme)}>
-                    <Typography sx={SubTitleStyles(true)}>Grant access to new or existing users.
-                        <Tooltip
-                            title={<><p style={ToolTipStyles()}>Roles and Sites listed in the dropdown lists are determined by what permissions you have from your own Roles.</p> <p style={ToolTipStyles()}> You may see a limited selection of Roles or Sites to choose from because of this.</p></>}
-                            placement="right"
-                            arrow
-                        ><HelpIcon sx={ToolTipIconStyles()} /></Tooltip></Typography>
-                    <Typography sx={SubTitleStyles()}>Fields marked with an (*) are required.</Typography>
-
-                    <Divider sx={FullDividerStyles(theme)} />
-                    <TextField
-                        required
-                        label={'Email Address'}
-                        id={'email'}
-                        name={'email'}
-                        type={'email'}
-                        value={emailInput}
-                        variant={'filled'}
-                        onChange={(evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-                            const { value } = evt.target;
-                            setEmailInput(value);
-                        }}
-                        sx={TextFieldStyles(theme, true)}
-                        error={showEmailError}
-                        helperText={showEmailError ? 'Please enter a valid email' : ''}
-                    />
-                    <RoleLocation
-                        setAccess={setAccess}
-                        access={access}
-                        siteDataList={siteDataList}
-                        getSiteListDetails={getSiteListDetails}
-                        roleList={roleList}
-                        locationDataList={locationDataList}
-                    />
-                </CardContent>
-                <Divider />
-                <Box sx={AdminInviteStyles(theme)} >
-                    <Button
-                        variant='contained'
-                        id="invite"
-                        disabled={!canInvite()}
-                        color='primary'
-                        label='Send Invite'
-                        onClick={inviteUser}
-                    />
-                </Box>
-                {toastMessage()}
-            </ContainerComponent>
+            {currentPage === 0 && <AddingUser advancePage={advancePage} email={email} setEmail={setEmail} />}
+            {currentPage === 1 && <GrantAccess advancePage={advancePage} accessList={accessList} email={email} inviteUser={inviteUser} />}
+            {currentPage === 2 && <AdminInviteSuccess advancePage={advancePage} email={email} setEmail={setEmail} />}
         </>
     )
 }

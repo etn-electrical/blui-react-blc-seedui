@@ -66,10 +66,7 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
             adopterId: authUIConfig.adopterId
         })
         if (response.status === 200) {
-            const organizationList: [LocationSiteProps] = await getSiteList(response);
-            const defaultOrg = organizationList.find((organization: LocationSiteProps) => organization.isDefaultOrganization);
-            const orgId = defaultOrg && defaultOrg.id || '';
-            processResponse(response, orgId);
+            processResponse(response);
         } else if (response.status === 404 || response.status === 0) {
             setIsInValidCredential(true)
         } else {
@@ -79,21 +76,9 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
 
     }
 
-    const getSiteList = async (response: any) => {
-        const { token } = response.response;
-        const siteList: [LocationSiteProps] = await getAdminInviteSite({
-            body: {
-                adopterId: authUIConfig.adopterId,
-                entityType: 'organization'
-            }, token
-        }) as [LocationSiteProps];
-        return siteList;
-    }
-
-    const processResponse = (response: any, orgId: string) => {
+    const processResponse = (response: any) => {
         const { token, adminRoleId } = response.response;
         LocalStorage.setAuthTocken(token, adminRoleId);
-        LocalStorage.setBaseConfig(orgId, authUIConfig.adopterId);
         LocalStorage.setRememberMe(rememberMe, emailInput);
         authActions().logIn(response.response);
     }

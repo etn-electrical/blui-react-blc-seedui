@@ -5,6 +5,7 @@ import { Spinner } from '../spinner/Spinner';
 
 export type CardContainerProps = {
     loading?: boolean;
+    style?: any;
 };
 
 export const ContainerComponent: React.FC<React.PropsWithChildren<CardContainerProps>> = (props) => (
@@ -19,7 +20,8 @@ export const ContainerComponent: React.FC<React.PropsWithChildren<CardContainerP
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                ...props.style
             }}
         >
              <Spinner visible={props.loading} />

@@ -88,3 +88,14 @@ export type LocationSiteProps = {
     canInviteUser: boolean 
     isDefaultOrganization: boolean
 }
+
+export type PostAdminInviteType = {
+    status: number
+}
+
+export type PostAdminUserRegisterType = {
+    status: number;
+    response?: {
+        data?: any
+    }
+}

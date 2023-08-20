@@ -3,16 +3,16 @@ import { SxProps, Theme } from '@mui/material/styles';
 
 export const AdminInviteStyles = (theme: Theme): SxProps<Theme> => ({
     display: 'flex',
-    justifyContent: 'end',
+    justifyContent: 'space-between',
     padding: '25px 22px',
     textTransform: 'none',
     '& .MuiButtonBase-root': { textTransform: 'none' }
 });
 
 export const FullDividerStyles = (theme: Theme): SxProps<Theme> => ({
-    m: `${theme.spacing(4)} -${theme.spacing(3)} ${theme.spacing(4)}`,
+    m: `${theme.spacing(4)} -${theme.spacing(3)} ${theme.spacing(2)}`,
     [theme.breakpoints.down('sm')]: {
-        m: `${theme.spacing(4)} -${theme.spacing(2)} ${theme.spacing(4)}`,
+        m: `${theme.spacing(4)} -${theme.spacing(2)} ${theme.spacing(2)}`,
     },
 });
 
@@ -21,6 +21,10 @@ export const RoleLocationContainer = (theme: Theme): SxProps<Theme> => ({
     '& .MuiAutocomplete-root': {},
     '& .MuiTextField-root': { width: '100%' },
     marginTop: '32px'
+});
+
+export const EmailInputField = (count: number) => ({
+    '& .MuiInputBase-input': {marginTop: count >= 1 ? '10px' : '0px'},
 });
 
 export const RoleLocationAction = (hidden = false, left = false) => ({
@@ -58,23 +62,13 @@ export const GroupItems = () => ({
     padding: 0,
 });
 
-export const DialogButtonStyles = (visible = true): SxProps<Theme> => ({
-    width: '90%',
-    visibility: visible ? 'visible' : 'hidden',
-    margin: '20px 0px',
+export const DialogButtonStyles = (): SxProps<Theme> => ({
+    width: 90,
+    textTransform: 'none',
     fontFamily: 'Open Sans',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: '14px',
-    display: 'flex',
-    textTransform: 'capitalize',
-    flex: 'none',
-    order: 0,
-    flexGrow: 0,
-    '& .Mui-disabled': {
-        backgroundColor: '#e0eef8',
-        color: '#80bde0'
-    }
 });
 
 export const RegCompleteContainerStyles = (theme: Theme): SxProps<Theme> => ({
@@ -124,7 +118,8 @@ export const SubTitleStyles = (first: boolean = false): SxProps<Theme> => ({
     fontFamily: 'Open Sans',
     fontSize: '16px',
     fontWeight: '400',
-    marginBottom: first && '4px'
+    marginBottom: first && '4px',
+    wordWrap: 'break-word'
 });
 
 export const ToolTipStyles = () => ({
@@ -134,4 +129,167 @@ export const ToolTipIconStyles = () => ({
     mb: '-6px',
     color: '#727E84',
     marginLeft: '7px'
+});
+
+
+export const LocationTextStyle = () => ({
+    fontFamily: 'Open Sans',
+    color: '#424E54',
+    fontWeight: 600,
+    fontSize: 16,
+    lineHeight: '21px'
+})
+
+export const LocationActionStyle = (selected = false) => ({
+    fontFamily: 'Open Sans',
+    color: selected ? '#007BC1':'#727E84',
+    fontWeight: 400,
+    fontSize: 12,
+    height: '24px',
+    width: '60px'
+})
+
+export const SelectionContentStyles = (theme: Theme): SxProps<Theme> => ({
+    background: '#F7F8F8',
+    flex: '1 1 0px',
+    overflow: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    p: `${theme.spacing(4)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)}`,
+    [theme.breakpoints.down('sm')]: {
+        p: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(2)}`,
+    },
+    
+});
+
+export const SearchIconStyle = () => ({
+    color: '#727E84', 
+    float: 'right', 
+    marginLeft: 'auto',
+    cursor: 'pointer'
+}) 
+
+export const SearchCancelIconStyle = () => ({
+    color: '#727E84', 
+    cursor: 'pointer'
+}) 
+
+export const SearchInputStyle = () => ({
+    width: '100%', 
+    borderRadius: 8
+})
+
+// export const RoleSelectionStyles = () => ({
+//     width: 175, 
+//     height: 36,
+//     '& .MuiInputBase-root': {
+//         padding: '0px 0px 0px 10px'
+//     },
+//     '& .MuiInputBase-input': {
+//         padding: '0px !important',
+//         height: 36
+//     },
+//     '& .MuiFormLabel-root': {
+//         margin: '-7px'
+//     }
+// })
+
+export const CopyAccessModal = (theme: Theme): SxProps<Theme> => ({
+    '& .MuiPaper-root': { width: '400px', height: '147px' },
+    '& .MuiDialogContent-root': { overflow: 'hidden'},
+    '& .MuiDialogContentText-root': {
+      fontFamily: 'Open Sans',
+      overflowWrap: 'break-word',
+      lineHeight: '22px',
+      color: '#424E54',
+      alignItems: 'center',
+      justifyContent: 'center',
+      display: 'flex'
+  
+    },
+    '& .MuiDialogTitle-root': {
+      fontFamily: 'Open Sans',
+      fontSize: '20px',
+      fontWeight: '600',
+      lineHeight: '27px',
+      color: '#424E54'
+    },
+    '& .MuiButtonBase-root': {
+      fontFamily: 'Open Sans',
+      fontSize: '14px',
+      lineHeight: '19px',
+      fontWeight: '600',
+      textTransform: 'none'
+    }
+  });
+
+  export const SuccessContainerStyles = (theme: Theme): SxProps<Theme> => ({
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#727E84',
+  flex: '1 1 0px',
+  overflow: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+  p: `${theme.spacing(4)} ${theme.spacing(3)} ${theme.spacing(2)} ${theme.spacing(3)}`
+});
+
+export const SuccessActionStyles = (theme: Theme): SxProps<Theme> => ({
+    display: 'flex',
+    justifyContent: 'end',
+    padding: '25px 22px',
+    textTransform: 'none',
+    '& .MuiButtonBase-root': { textTransform: 'none' }
+});
+
+
+export const DiscardModal = (theme: Theme): SxProps<Theme> => ({
+    '& .MuiPaper-root': { width: '400px', height: '157px' },
+    '& .MuiDialogContentText-root': {
+      fontFamily: 'Open Sans',
+      overflowWrap: 'break-word',
+      lineHeight: '22px',
+      color: '#424E54',
+         },
+    '& .MuiDialogTitle-root': {
+      fontFamily: 'Open Sans',
+      fontSize: '20px',
+      fontWeight: '600',
+      lineHeight: '27px',
+      color: '#424E54'
+    },
+    '& .MuiButtonBase-root': {
+      fontFamily: 'Open Sans',
+      fontSize: '14px',
+      lineHeight: '19px',
+      fontWeight: '600',
+      textTransform: 'none'
+    }
+  });
+
+  export const InviteMoreButtonStyles = (): SxProps<Theme> => ({
+    width: '128px',
+    height: '36px',
+    textTransform: 'none',
+    fontFamily: 'Open Sans',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '14px',
+});
+
+export const CopyTextFieldStyles = (theme: Theme): SxProps<Theme> => ({
+    width: '285px',
+        "& .MuiInputBase-root": {
+            height: '56px',
+            //paddingLeft: '10px'
+        },
+    [theme.breakpoints.down('sm')]: {
+        mt: 3,
+    },
+    '& .MuiFormLabel-root': {
+        fontFamily: 'Open Sans'
+    },
+    '& .MuiInputBase-input': {
+        //marginLeft: '10px'
+    }
 });

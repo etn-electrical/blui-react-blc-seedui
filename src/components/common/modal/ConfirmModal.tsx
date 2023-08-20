@@ -11,9 +11,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
-  title: string;
-  content: string;
+  title: string | JSX.Element;
+  content: string | JSX.Element;
   actions?: JSX.Element;
+  customStyle?: any;
 }
 
 export const ConfirmModalContainer = (theme: Theme): SxProps<Theme> => ({
@@ -43,11 +44,11 @@ export const ConfirmModalContainer = (theme: Theme): SxProps<Theme> => ({
 
 export const ConfirmModal: React.FC<React.PropsWithChildren<SimpleDialogProps>> = (props) => {
 
-  const { onClose, open, title, content, actions } = props;
+  const { onClose, open, title, content, actions, customStyle } = props;
   const theme = useTheme();
 
   return (
-    <Dialog onClose={onClose} open={open} sx={ConfirmModalContainer(theme)}>
+    <Dialog onClose={onClose} open={open} sx={customStyle ? customStyle(theme) : ConfirmModalContainer(theme)}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">

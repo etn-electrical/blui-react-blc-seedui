@@ -11,16 +11,6 @@ function setAuthTocken(token: string, roleId: string): void {
     window.localStorage.setItem('user_data', JSON.stringify(userData));
 }
 
-function setBaseConfig(organizationId: string, adopterId: string): void {
-    const baseInfo = {organizationId, adopterId};
-    window.localStorage.setItem('base_info', JSON.stringify(baseInfo));
-}
-
-function getBaseConfig() {
-    const userData = JSON.parse(window.localStorage.getItem('base_info') || '{}');
-    return userData
-}
-
 function setRememberMe(rememberMe: boolean, email: string): void {
     const userData = { rememberMe, email};
     window.localStorage.setItem('rememberMe', JSON.stringify(userData));
@@ -41,7 +31,5 @@ export const LocalStorage = {
     getAuthTocken,
     setRememberMe,
     getRememberMe,
-    clearAuthToken,
-    setBaseConfig,
-    getBaseConfig
+    clearAuthToken
 };

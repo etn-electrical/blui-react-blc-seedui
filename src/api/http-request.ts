@@ -1,8 +1,8 @@
-import { HttpResponse, HttpRequestParams , HttpRequestBase, ApiUrl, HttpRequestOptions} from '../types/api-types';
+import { HttpResponse, HttpRequestParams , HttpRequestBase, HttpRequestOptions} from '../types/api-types';
 
 
-const bearerToken = (token: string) => `Bearer ${token}`
-const request = async <TBody = unknown, TResponse = unknown>(
+const bearerToken = (token: string) => (token ? `Bearer ${token}` : '');
+const request = async <TResponse = unknown>(
     args: HttpRequestParams & HttpRequestBase & HttpRequestOptions & {token?: string}
 ): Promise<{ status: number; response: TResponse }> => {
 
@@ -12,10 +12,10 @@ const request = async <TBody = unknown, TResponse = unknown>(
             method: args.method,
             headers: {
                 ...('body' in args ? { 'Content-Type': 'application/json' } : {}),
-                ...args.headers,
                 'claim-appid': "0oa6c6ymssh6xpgS81d7",
                 'api-key' : "euJMkV8aG2eyWbubPX1rAT6Gczm1vj9p",
-                'Authorization': bearerToken(args.token)
+                'Authorization': bearerToken(args.token),
+                ...args.headers
             },
             ...('body' in args
             ? {
@@ -38,12 +38,12 @@ const request = async <TBody = unknown, TResponse = unknown>(
 
 export const HttpRequest = {
 
-    post: <TBody = {}>(
+    post: <TBody = Record<string, never>>(
         args: { resource: string; body: TBody; token?: string } & HttpRequestOptions & {token?: string}
     ): Promise<HttpResponse> => request<TBody>({ method: 'POST', ...args }),
 
     get: <TResponse>(
-        args: { resource: string; } & HttpRequestOptions
-    ): Promise<HttpResponse<TResponse>> => request<never, TResponse>({ method: 'GET', ...args }),
+        args: { resource: string; token?: string} & HttpRequestOptions
+    ): Promise<HttpResponse<TResponse>> => request<TResponse>({ method: 'GET', ...args }),
 
 };
