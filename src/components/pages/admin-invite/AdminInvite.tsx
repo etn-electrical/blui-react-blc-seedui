@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-
-import { LocationSiteProps } from '../../../types/admininvite-types';
+import { LocationSiteProps, AccessRoleTypes, LocationTypes, SiteTypes } from '../../../types/admininvite-types';
 import CustomizedSnackbar from '../../common/snackbar/Snackbar';
 import { postAdminInvite, getOrgList } from '../../../api/admin-invite-register';
 import { ERROR_MSG } from '../../../constants/registration-constants';
@@ -39,26 +38,27 @@ export const AdminInvite: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        const orgList: any = [];
-        const locList: any = {};
-        const siteList: any = {};
+        const orgList: AccessRoleTypes[] = [];
+        const locList: LocationTypes = {};
+        const siteList: SiteTypes = {};
         if (orgDetailsList) {
-            orgDetailsList.map((org: any) => {
+            orgDetailsList.map((org: AccessRoleTypes) => {
 
                 if (org.Sites.length) {
-                    org.Sites.map((loc: any) => {
+                    org.Sites.map((loc: AccessRoleTypes) => {
                         if (loc.Sites.length) {
-                            const sitesFilter = loc.Sites.filter((site: any) => site.canInviteUser)
+                            const sitesFilter = loc.Sites.filter((site: AccessRoleTypes) => site.canInviteUser)
                             if (sitesFilter.length) siteList[loc.id] = sitesFilter;
                         }
                     })
-                    const locationFilter = org.Sites.filter((loc: any) => loc.canInviteUser || siteList[loc.id]);
+                    const locationFilter = org.Sites.filter((loc: AccessRoleTypes) => loc.canInviteUser || siteList[loc.id]);
                     if (locationFilter.length) locList[org.id] = locationFilter;
                 }
                 if (locList[org.id] || org.canInviteUser) orgList.push(org);
             })
             setAccessList({ orgList, locList, siteList })
         }
+
     }, [orgDetailsList])
 
     const getSiteList = async () => {
@@ -67,27 +67,25 @@ export const AdminInvite: React.FC = () => {
             adopterId, token: loggedInUserData.token
         }) as [LocationSiteProps];
         setOrgDetailsList(siteList.slice(0, 100));
-        // setOrgDetailsList(siteList);
-
         setLoading(false);
     }
 
-    const getSiteAccessDetails = (dataList: any) => {
+    const getSiteAccessDetails = (dataList: {orgnizationData: AccessRoleTypes[], locationData: LocationTypes, siteData: SiteTypes}) => {
         const { orgnizationData, locationData, siteData } = dataList;
         const accessDetails: any = [];
-        orgnizationData.map((org: any) => {
+        orgnizationData.map((org: AccessRoleTypes) => {
 
             if (org.roleAccess) {
                 accessDetails.push({ roleId: "561c019c-5d12-4e6e-99f7-154443a9f39b", roleName: org.roleAccess, sites: [{ siteId: org.id }] })
             }
             const findlocation = locationData[org.id] || [];
-            findlocation.map((loc: any) => {
+            findlocation.map((loc: AccessRoleTypes) => {
                 if (loc.roleAccess && org.roleAccess !== loc.roleAccess) {
                     accessDetails.push({ roleId: "561c019c-5d12-4e6e-99f7-154443a9f39b", roleName: loc.roleAccess, sites: [{ siteId: loc.id }] })
                 }
 
                 const findsite = siteData[loc.id] || [];
-                findsite.map((site: any) => {
+                findsite.map((site: AccessRoleTypes) => {
                     if (site.roleAccess && loc.roleAccess !== site.roleAccess) {
                         accessDetails.push({ roleName: site.roleAccess, sites: [{ siteId: site.id }] })
                     }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, CardActions, CardContent, Divider, CardHeader, Typography, Chip, TextField, Autocomplete } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-
 import { ContainerComponent } from '../../common/container/Container';
 import { DialogTitleStyles, DialogContentStyles } from '../../../styles/RegistrationStyle';
 import { DialogButtonStyles, AdminInviteStyles, FullDividerStyles, SubTitleStyles, EmailInputField } from './AdminInviteStyle';
@@ -72,7 +71,6 @@ export const AddingUser: React.FC<React.PropsWithChildren<any>> = (props: any) =
                                         sx={{ margin: '10px 8px 0px 0px' }}
                                         label={option}
                                         onDelete={() => removeSelected(index)}
-
                                     // {...getTagProps({ index })}
                                     />
                                 ))

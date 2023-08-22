@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useMemo, Fragment } from 'react';
 import { Button, CardActions, CardContent, Divider, CardHeader, Box, Typography, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useInjectedUIContext } from '../../../context/AuthContextProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-
+import { LocationSiteProps, AccessRoleTypes, LocationTypes, SiteTypes } from '../../../types/admininvite-types';
+import { useInjectedUIContext } from '../../../context/AuthContextProvider';
 import { getAccessByEmail } from '../../../api/admin-invite-register';
 import { ConfirmModal } from '../../common/modal/ConfirmModal';
 import { isValidEmail } from '../../../utils/common';
 import { ContainerComponent } from '../../common/container/Container';
 import { DialogTitleStyles, DialogContentStyles } from '../../../styles/RegistrationStyle';
-import { CopyTextFieldStyles, DiscardModal, CopyAccessModal, SearchInputStyle, SearchCancelIconStyle, SearchIconStyle, SelectionContentStyles, LocationActionStyle, LocationTextStyle, DialogButtonStyles, AdminInviteStyles, ToolTipIconStyles, FullDividerStyles, AlertStyles, TextFieldStyles, SubTitleStyles, ToolTipStyles } from './AdminInviteStyle';
+import { CopyTextFieldStyles, DiscardModal, CopyAccessModalStyle, SearchInputStyle, SearchCancelIconStyle, SearchIconStyle, SelectionContentStyles, LocationTextStyle, DialogButtonStyles, AdminInviteStyles, ToolTipIconStyles, FullDividerStyles, AlertStyles, TextFieldStyles, SubTitleStyles, ToolTipStyles, RoleContainerStyles } from './AdminInviteStyle';
 import CustomizedSnackbar from '../../common/snackbar/Snackbar';
 import { LocalStorage } from '../../../utils/local-storage';
 import { ToggleActionComponent } from './ToggleActions';
@@ -19,15 +19,12 @@ import { GrantAccessHeader } from './GrantAccessHeader';
 
 export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) => {
     const { advancePage, accessList, email, inviteUser } = props;
-    // const [email, setEmail] = useState([]);
     const { authUIConfig } = useInjectedUIContext();
     const { adopterId, adopterApplicationName } = authUIConfig;
-    const [isSearch, setIsSearch] = useState(false);
     const [searchString, setSearchString] = useState('');
     const [visibleData, setVisibleData] = useState<any>({ siteData: {}, locationData: {}, orgnizationData: [] });
     const [filteredList, setFilteredList] = useState([]);
     const [searchDataList, setSearchDataList] = useState<any>([]);
-    const [roleData, setRoleData] = useState<any>(JSON.parse(JSON.stringify({ orgList: [], locList: {}, siteList: {} })))
     const [copyAccessModal, setCopyAccessModal] = useState<any>(false)
     const [discardModal, setDiscardModal] = useState<any>(false);
     const [isInviteEnabled, setIsInviteEnabled] = useState<boolean>(false);
@@ -46,9 +43,6 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
         return { roleId, token };
     }, []);
 
-    useEffect(() => {
-        isUpdated();
-    }, [visibleData]);
 
     useEffect(() => {
         if (copyAccessData.length) {
@@ -59,47 +53,45 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
 
     useEffect(() => {
         if (searchString.length >= 1) {
-            var res = searchDataList.filter(({ name }: any) => name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1);
+            var res = searchDataList.filter(({ name }: AccessRoleTypes) => name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1);
             setFilteredList(res);
-
         }
     }, [searchString, searchDataList]);
 
     useEffect(() => {
         const { siteData, locationData, orgnizationData } = visibleData;
-        if (isSearch || !searchDataList.length) {
+        if (searchString.length || !searchDataList.length) {
             const searchNewList = [];
             searchNewList.push(...orgnizationData);
             Object.keys(locationData).map((key: string) => searchNewList.push(...locationData[key]))
             Object.keys(siteData).map((key: string) => searchNewList.push(...siteData[key]))
             setSearchDataList(searchNewList)
         }
-    }, [isSearch, visibleData]);
+        isUpdated();
+    }, [visibleData]);
 
     useEffect(() => {
         const { orgList, locList, siteList } = accessList;
         setVisibleData({ siteData: siteList, locationData: locList, orgnizationData: orgList })
-        setRoleData(JSON.parse(JSON.stringify({ orgList, locList, siteList })))
-
     }, [accessList])
 
-    const roleSelectionProcess = (value: string, data: any, newSiteData: any, newLocationData: any, newOrganizationData: any) => {
+    const roleSelectionProcess = (value: string, data: AccessRoleTypes, newSiteData: SiteTypes, newLocationData: LocationTypes, newOrganizationData: AccessRoleTypes[]) => {
         if (data.entityType === 'site') {
-            const pos = newSiteData[data.parentId].findIndex((site: any) => site.id === data.id);
+            const pos = newSiteData[data.parentId].findIndex((site: AccessRoleTypes) => site.id === data.id);
             newSiteData[data.parentId][pos].roleAccess = value;
         } else if (data.entityType === 'location') {
-            const pos = newLocationData[data.parentId].findIndex((loc: any) => loc.id === data.id);
+            const pos = newLocationData[data.parentId].findIndex((loc: AccessRoleTypes) => loc.id === data.id);
             newLocationData[data.parentId][pos].roleAccess = value;
             const associateSite = newSiteData[data.id] || [];
-            associateSite.map((site: any) => site.roleAccess = value)
+            associateSite.map((site: AccessRoleTypes) => site.roleAccess = value)
         } else {
-            const pos = newOrganizationData.findIndex((org: any) => org.id === data.id);
+            const pos = newOrganizationData.findIndex((org: AccessRoleTypes) => org.id === data.id);
             newOrganizationData[pos].roleAccess = value;
             const associateLocation = newLocationData[data.id] || [];
-            associateLocation.map((location: any) => location.roleAccess = value);
-            associateLocation.map((location: any) => {
+            associateLocation.map((location: AccessRoleTypes) => location.roleAccess = value);
+            associateLocation.map((location: AccessRoleTypes) => {
                 const associateSite = newSiteData[location.id] || [];
-                associateSite.map((site: any) => site.roleAccess = value)
+                associateSite.map((site: AccessRoleTypes) => site.roleAccess = value)
             });
         }
     }
@@ -117,9 +109,11 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
     }
 
     const roleSelectionCopy = () => {
-        const newSiteData = JSON.parse(JSON.stringify(roleData.siteList))
-        const newLocationData = JSON.parse(JSON.stringify(roleData.locList))
-        const newOrganizationData = JSON.parse(JSON.stringify(roleData.orgList))
+        const { orgList, locList, siteList } = accessList;
+
+        const newSiteData = JSON.parse(JSON.stringify(siteList))
+        const newLocationData = JSON.parse(JSON.stringify(locList))
+        const newOrganizationData = JSON.parse(JSON.stringify(orgList))
         copyAccessData.map((data: any) => {
             const findSite = searchDataList.find((site: any) => site.id === data.siteId)
             if (findSite) roleSelectionProcess(data.roleName, findSite, newSiteData, newLocationData, newOrganizationData);
@@ -181,12 +175,19 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
         setLoading(false)
     }
 
+    const roleNameActions = (site: AccessRoleTypes, index: number, parent?: AccessRoleTypes) => {
+        return (<>
+        <Typography sx={LocationTextStyle()}> {site.name}</Typography>
+            {toggleActions(site, index, parent)}
+        </>)
+    }
+
 
     return (
         <>
             <ConfirmModal
                 onClose={() => setCopyAccessModal(false)}
-                customStyle={CopyAccessModal}
+                customStyle={CopyAccessModalStyle}
                 open={copyAccessModal}
                 title={<>Copy Access from...<CloseIcon onClick={() => setCopyAccessModal(false)} sx={{ position: 'absolute', right: 8, top: 8, cursor: 'pointer' }} /></>}
                 content={<>
@@ -255,26 +256,22 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
                     <GrantAccessHeader searchString={searchString} setSearchString={setSearchString} setCopyAccessType={setCopyAccessType} copyUserAccess={copyUserAccess} setCopyAccessModal={setCopyAccessModal} />
                     <CardContent sx={SelectionContentStyles(theme)}>
                         {searchString.length < 1 &&
-                            visibleData?.orgnizationData?.map((item: any, index: number) => <Fragment key={index}>
-                                <Box sx={{ display: 'flex', height: 24, alignItems: 'center', marginBottom: '8px' }}>
+                            visibleData?.orgnizationData?.map((item: AccessRoleTypes, index: number) => <Fragment key={index}>
+                                <Box sx={RoleContainerStyles()}>
                                     {visibleData?.locationData[item.id] && visibleData?.locationData[item.id].length ? <Typography sx={{ color: '#727E84', display: 'flex' }} onClick={() => toggleElement(item.id)}> {!expand.indexOf(item.id) ? <ArrowDropDownIcon /> : <ArrowRightIcon />}</Typography> : <Typography sx={{ width: '25px' }} />}
-                                    <Typography sx={LocationTextStyle()}> {item.name}</Typography>
-
-                                    {toggleActions(item, index)}
+                                    {roleNameActions(item, index)}
 
                                 </Box>
                                 <Typography sx={{ display: expand.indexOf(item.id) === -1 ? 'none' : 'block', marginLeft: '16px' }}>
-                                    {visibleData?.locationData[item.id as any]?.map((location: any, index: number) => <Fragment key={index}>
-                                        <Box sx={{ display: 'flex', height: 24, alignItems: 'center', marginBottom: '8px' }}>
+                                    {visibleData?.locationData[item.id]?.map((location: AccessRoleTypes, index: number) => <Fragment key={index}>
+                                        <Box sx={RoleContainerStyles()}>
                                             {visibleData.siteData[location.id] && visibleData.siteData[location.id].length ? <Typography sx={{ color: '#727E84', display: 'flex' }} onClick={() => toggleElement(location.id)}>{expand.indexOf(location.id) != -1 ? <ArrowDropDownIcon /> : <ArrowRightIcon />}</Typography> : <Typography sx={{ width: '25px' }} />}
-                                            <Typography sx={LocationTextStyle()}> {location.name}</Typography>
-                                            {toggleActions(location, index, item)}
+                                            {roleNameActions(location, index, item)}
                                         </Box>
                                         <Typography sx={{ display: expand.indexOf(location.id) === -1 ? 'none' : 'block', marginLeft: '40px' }}>
-                                            {visibleData.siteData[location.id as any]?.map((site: any, index: number) => <Fragment key={index}>
-                                                <Box sx={{ display: 'flex', height: 24, alignItems: 'center', marginBottom: '8px' }}>
-                                                    <Typography sx={LocationTextStyle()}> {site.name}</Typography>
-                                                    {toggleActions(site, index, location)}
+                                            {visibleData.siteData[location.id]?.map((site: AccessRoleTypes, index: number) => <Fragment key={index}>
+                                                <Box sx={RoleContainerStyles()}>
+                                                    {roleNameActions(site, index, location)}
                                                 </Box>
                                             </Fragment>
 
@@ -301,8 +298,6 @@ export const GrantAccess: React.FC<React.PropsWithChildren<any>> = (props: any) 
 
 
                     </CardContent>
-
-
                 </CardContent>
                 <CardActions sx={AdminInviteStyles(theme)}>
                     <Button

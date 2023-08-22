@@ -99,3 +99,22 @@ export type PostAdminUserRegisterType = {
         data?: any
     }
 }
+
+export type AccessRoleTypes = {
+    canInviteUser: boolean;
+    entityType: string;
+    id: string;
+    name: string;
+    parentId: string;
+    roleName: string;
+    roleAccess?: string;
+    Sites?: AccessRoleTypes[]
+}
+
+export type LocationTypes = {
+   [key: string]: AccessRoleTypes[]
+}
+
+export type SiteTypes = {
+    [key: string]: AccessRoleTypes[]
+ }

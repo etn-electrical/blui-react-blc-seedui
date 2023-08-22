@@ -7,6 +7,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { SearchInputStyle, SearchCancelIconStyle, SearchIconStyle } from './AdminInviteStyle';
 
+export const CopyMenu = ["My Access", "Someone Else's Access"]
+
 export const GrantAccessHeader: React.FC<React.PropsWithChildren<any>> = (props: any) => {
     const { copyUserAccess, setCopyAccessModal, setCopyAccessType, searchString, setSearchString } = props;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,6 +22,12 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<any>> = (props:
     };
     const open = Boolean(anchorEl);
 
+    const onMenuSelect = (option: string) => {
+        option === 'My Access' ? copyUserAccess(true) : setCopyAccessModal(true);
+        setAnchorEl(null);
+        setCopyAccessType(option)
+    }
+
     return <>
         <Box sx={{ marginBottom: '10px', display: 'flex' }}>
 
@@ -32,20 +40,9 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<any>> = (props:
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
-                    MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                    }}
+                    MenuListProps={{ 'aria-labelledby': 'basic-button' }}
                 >
-                    <MenuItem onClick={() => {
-                        copyUserAccess(true);
-                        setAnchorEl(null);
-                        setCopyAccessType('My Access')
-                    }}>My Access</MenuItem>
-                    <MenuItem onClick={() => {
-                        setCopyAccessModal(true);
-                        setAnchorEl(null);
-                        setCopyAccessType("Someone Else's Access")
-                    }}>Someone Else's Access</MenuItem>
+                    {CopyMenu.map(option => <MenuItem onClick={() => onMenuSelect(option)}>{option}</MenuItem>)}
                 </Menu>
             </>
             }

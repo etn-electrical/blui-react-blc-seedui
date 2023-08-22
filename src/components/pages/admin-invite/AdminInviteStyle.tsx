@@ -142,11 +142,12 @@ export const LocationTextStyle = () => ({
 
 export const LocationActionStyle = (selected = false) => ({
     fontFamily: 'Open Sans',
-    color: selected ? '#007BC1':'#727E84',
+    color: '#727E84',
     fontWeight: 400,
     fontSize: 12,
     height: '24px',
-    width: '60px'
+    width: '60px',
+    pointerEvents: selected && 'none'
 })
 
 export const SelectionContentStyles = (theme: Theme): SxProps<Theme> => ({
@@ -179,22 +180,7 @@ export const SearchInputStyle = () => ({
     borderRadius: 8
 })
 
-// export const RoleSelectionStyles = () => ({
-//     width: 175, 
-//     height: 36,
-//     '& .MuiInputBase-root': {
-//         padding: '0px 0px 0px 10px'
-//     },
-//     '& .MuiInputBase-input': {
-//         padding: '0px !important',
-//         height: 36
-//     },
-//     '& .MuiFormLabel-root': {
-//         margin: '-7px'
-//     }
-// })
-
-export const CopyAccessModal = (theme: Theme): SxProps<Theme> => ({
+export const CopyAccessModalStyle = (theme: Theme): SxProps<Theme> => ({
     '& .MuiPaper-root': { width: '400px', height: '147px' },
     '& .MuiDialogContent-root': { overflow: 'hidden'},
     '& .MuiDialogContentText-root': {
@@ -293,3 +279,17 @@ export const CopyTextFieldStyles = (theme: Theme): SxProps<Theme> => ({
         //marginLeft: '10px'
     }
 });
+
+export const RoleContainerStyles = () => ({
+    display: 'flex', 
+    height: 24, 
+    alignItems: 'center', 
+    marginBottom: '8px'
+})
+
+export const ToggleContainerStyles = () => ({
+    display: 'flex', 
+    marginLeft: 'auto', 
+    width: '53%', 
+    justifyContent: 'center'
+})
