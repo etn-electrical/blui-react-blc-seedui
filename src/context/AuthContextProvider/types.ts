@@ -13,8 +13,8 @@ type AuthUIConfig = {
     adopterId: string;
     adopterApplicationName: string;
     applicationId: string;
-    clientid: string;
-    redirectUri: string;
+    clientid?: string;
+    redirectUri?: string;
     inviteCount?: number;
 };
 type AuthUIContextProviderProps = {

@@ -56,8 +56,8 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<GrantAccessHead
                             onClose={handleClose}
                             MenuListProps={{ 'aria-labelledby': 'basic-button' }}
                         >
-                            {CopyMenu.map((option) => (
-                                <MenuItem onClick={() => onMenuSelect(option)}>{option}</MenuItem>
+                            {CopyMenu.map((option, index) => (
+                                <MenuItem onClick={() => onMenuSelect(option)} key={index}>{option}</MenuItem>
                             ))}
                         </Menu>
                     </>
