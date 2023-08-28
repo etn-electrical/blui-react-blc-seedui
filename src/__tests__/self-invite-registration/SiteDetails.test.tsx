@@ -6,13 +6,20 @@ import { SiteDetails } from '../../components/pages/self-invite-registration/Sit
 import { AuthContextMap as AuthUIContextProvider } from '../../utils/AuthContextMap';
 
 describe('Organization details', () => {
-
     it('test Organization Details Component Load ', () => {
         render(
             <AuthUIContextProvider>
                 <SiteDetails
-                    setOrgDetails={() => { }}
-                    orgDetails={{ address: 'xyz', address2: '', city: '', state: '', postal: '', code: '', country: { id: 'usa' } }} />
+                    setOrgDetails={() => {}}
+                    orgDetails={{
+                        address: 'xyz',
+                        address2: '',
+                        city: '',
+                        state: { id: 'New York', name: '' },
+                        postalCode: '',
+                        country: { id: 'usa', name: '' },
+                    }}
+                />
             </AuthUIContextProvider>
         );
     });
@@ -21,8 +28,16 @@ describe('Organization details', () => {
         render(
             <AuthUIContextProvider>
                 <SiteDetails
-                    setOrgDetails={() => { }}
-                    orgDetails={{ address: 'xyz', address2: '', city: '', state: '', postal: '', code: '', country: { id: 'usa' } }} />
+                    setOrgDetails={() => {}}
+                    orgDetails={{
+                        address: 'xyz',
+                        address2: '',
+                        city: '',
+                        state: { id: 'New York', name: '' },
+                        postalCode: '',
+                        country: { id: 'usa', name: '' },
+                    }}
+                />
             </AuthUIContextProvider>
         );
         const address = screen.getByTestId('address').querySelector('input');
@@ -32,5 +47,4 @@ describe('Organization details', () => {
         fireEvent.change(address2, { target: { value: 'cross street' } });
         expect(address2).toHaveValue('cross street');
     });
-
 });

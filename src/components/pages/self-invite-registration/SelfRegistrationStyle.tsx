@@ -1,19 +1,17 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-
 export const RegCompleteContainerStyles = (theme: Theme): SxProps<Theme> => ({
     height: '100%',
     [theme.breakpoints.down('sm')]: {
         minHeight: 'auto',
-    }
+    },
 });
 
 export const IconHolderStyles = (theme: Theme): SxProps<Theme> => ({
     display: 'flex',
     justifyContent: 'center',
-    mb: '31px'
+    mb: '31px',
 });
-
 
 export const IconContainerStyles = (theme: Theme, first = false): SxProps<Theme> => ({
     display: 'flex',
@@ -23,7 +21,7 @@ export const IconContainerStyles = (theme: Theme, first = false): SxProps<Theme>
     height: '96px',
     background: '#E0EEF8',
     borderRadius: '48px',
-    mr: first ? '24px' : '0px'
+    mr: first ? '24px' : '0px',
 });
 
 export const OrgTxtStyles = (theme: Theme, pos?: string): SxProps<Theme> => ({
@@ -34,9 +32,8 @@ export const OrgTxtStyles = (theme: Theme, pos?: string): SxProps<Theme> => ({
     lineHeight: '24px',
     letterSpacing: '0.25px',
     color: '#424E54',
-    marginTop: pos === 'first' ? '51px' : ' 20px'
+    marginTop: pos === 'first' ? '51px' : ' 20px',
 });
-
 
 export const DialogButtonStyles = (visible = true, visibleFull = false): SxProps<Theme> => ({
     width: visibleFull ? '100%' : '90%',
@@ -53,9 +50,9 @@ export const DialogButtonStyles = (visible = true, visibleFull = false): SxProps
     flexGrow: 0,
     '& .Mui-disabled': {
         backgroundColor: '#e0eef8',
-        color: '#80bde0'
+        color: '#80bde0',
     },
-    height: '36px'
+    height: '36px',
 });
 
 export const DialogExtButtonStyles = (): SxProps<Theme> => ({
@@ -71,14 +68,13 @@ export const DialogExtButtonStyles = (): SxProps<Theme> => ({
     order: 0,
     flexGrow: 0,
     borderColor: '#424e544d',
-    height: '36px'
+    height: '36px',
 });
-
 
 export const BackIconStyles = (): SxProps<Theme> => ({
     fontSize: '25px',
     color: '#727E84',
-    cursor: 'pointer'
+    cursor: 'pointer',
 });
 
 export const FullDividerStyles = (theme: Theme): SxProps<Theme> => ({
@@ -100,7 +96,7 @@ export const ExpiredBtn = (): SxProps<Theme> => ({
     order: 0,
     flexGrow: 0,
     height: '36px',
-   mb: 0
+    mb: 0,
 });
 
 export const OrgTxtTitleStyles = (theme: Theme, pos?: string): SxProps<Theme> => ({
@@ -110,7 +106,7 @@ export const OrgTxtTitleStyles = (theme: Theme, pos?: string): SxProps<Theme> =>
     lineHeight: '27px',
     letterSpacing: '0.15px',
     color: '#2B353A',
-    marginTop: '34px'
+    marginTop: '34px',
 });
 
 export const AccDividerStyles = (theme: Theme): SxProps<Theme> => ({

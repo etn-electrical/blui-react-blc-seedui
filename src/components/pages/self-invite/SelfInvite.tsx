@@ -7,19 +7,24 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
+
 import { useTheme } from '@mui/material/styles';
 
 import { CreateAccount } from './CreateAccount';
 import { VerificationSent } from './VerificationSent';
-import { RegContainerStyles, DialogTitleStyles, DialogContentStyles, RegistrationContainerStyle } from '../../../styles/RegistrationStyle';
+import {
+    RegContainerStyles,
+    DialogTitleStyles,
+    DialogContentStyles,
+    RegistrationContainerStyle,
+} from '../../../styles/RegistrationStyle';
 import { DialogActionsStyles, DialogButtonStyles } from './SelfRegistrationStyle';
 import { postSelfInvite } from '../../../api/self-user-register';
 import { Spinner } from '../../common/spinner/Spinner';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-import { RegistrationPage } from '../../../types/selfinvite-types';
+import { RegistrationPage, PostSelfInviteType } from '../../../types/selfinvite-types';
 import { ConfirmModal } from '../../common/modal/ConfirmModal';
-import { rolesConfig } from '../../../config';
-
+import { appConfig } from '../../../app-config';
 
 export const SelfInvite: React.FC = () => {
     const { authUIConfig } = useInjectedUIContext();
@@ -28,11 +33,9 @@ export const SelfInvite: React.FC = () => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
-    const [modalData, setModalData] = useState<any>({ isOpen: false, email: '' })
+    const [modalData, setModalData] = useState<{ isOpen: boolean; email: string }>({ isOpen: false, email: '' });
     const url = new URL(window.location.href);
     const theme = useTheme();
-
-
 
     const RegistrationPages: RegistrationPage[] = [
         {
@@ -51,26 +54,24 @@ export const SelfInvite: React.FC = () => {
         {
             name: 'VerifyEmail',
             pageTitle: 'Confirm your Email Address',
-            pageBody: (
-                <VerificationSent />
-            ),
+            pageBody: <VerificationSent />,
             canGoForward: email.length > 0,
             canGoBack: true,
-        }
-    ]
+        },
+    ];
 
     const inviteUser = async () => {
         const request = {
             adopterId,
             emailId: email,
             adopterApplicationName,
-            adopterApplicationRegistrationUrl: `${url.host}${rolesConfig.selfRegistrationUrl}`,
-        }
+            adopterApplicationRegistrationUrl: `${url.host}${appConfig.selfRegistrationUrl}`,
+        };
         setLoading(true);
-        const response: any = await postSelfInvite(request);
+        const response: PostSelfInviteType = await postSelfInvite(request);
         response?.errorCode === 409 ? setModalData({ isOpen: true, email: email }) : setCurrentPage(currentPage + 1);
         setLoading(false);
-    }
+    };
 
     const advancePage = (delta = 0): void => {
         if ((currentPage !== 0 && delta === -1) || (currentPage !== RegistrationPages.length - 1 && delta === 1)) {
@@ -92,21 +93,28 @@ export const SelfInvite: React.FC = () => {
                 open={modalData.isOpen}
                 title={'Account already exists'}
                 content={`This email address already has an account with ${adopterApplicationName}. Please contact your admin or reach out to Brightlayerappsupport@eaton.com`}
-                actions={<>
-                <Button onClick={() => setModalData({ isOpen: false, email: '' })}>Cancel</Button>
-                <Button onClick={() => window.location.href='/login'}>Log In</Button>
-                </>}
+                actions={
+                    <>
+                        <Button onClick={() => setModalData({ isOpen: false, email: '' })}>Cancel</Button>
+                        <Button onClick={() => (window.location.href = '/login')}>Log In</Button>
+                    </>
+                }
             />
             <Spinner visible={loading} />
             <Card sx={RegContainerStyles(theme)}>
                 <CardHeader
-                    title={<Typography variant={'h6'} sx={{ fontWeight: 600 }}> {RegistrationPages[currentPage]?.pageTitle || ''} </Typography>}
+                    title={
+                        <Typography variant={'h6'} sx={{ fontWeight: 600 }}>
+                            {' '}
+                            {RegistrationPages[currentPage]?.pageTitle || ''}{' '}
+                        </Typography>
+                    }
                     sx={DialogTitleStyles(theme)}
                 />
                 <CardContent sx={DialogContentStyles(theme)}>{RegistrationPages[currentPage]?.pageBody}</CardContent>
                 {currentPage !== 1 && <Divider />}
                 <CardActions sx={DialogActionsStyles(theme)}>
-                    {!isLastStep &&
+                    {!isLastStep && (
                         <Button
                             variant="contained"
                             color="primary"
@@ -115,11 +123,13 @@ export const SelfInvite: React.FC = () => {
                             disabled={!canProgress()}
                             onClick={(): void => advancePage(1)}
                             sx={DialogButtonStyles()}
-                        > Next </Button>
-                    }
+                        >
+                            {' '}
+                            Next{' '}
+                        </Button>
+                    )}
                 </CardActions>
             </Card>
         </Box>
-    )
-
-}
+    );
+};

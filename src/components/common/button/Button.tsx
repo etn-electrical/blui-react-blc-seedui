@@ -9,13 +9,13 @@ type ButtonProps = {
     buttonStyle?: object;
     onClick?: () => void;
     id?: string;
-}
+};
 
 export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
     const { id, variant, disabled, color, label, buttonStyle = {}, onClick } = props;
     return (
         <MuiButton
-           data-testid={id}
+            data-testid={id}
             variant={variant}
             disabled={disabled}
             color={color}
@@ -24,5 +24,5 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) =>
         >
             {label}
         </MuiButton>
-    )
-}
+    );
+};

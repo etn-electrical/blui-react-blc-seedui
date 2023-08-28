@@ -6,7 +6,6 @@ import { SelfRegistration } from '../../components/pages/self-invite-registratio
 import { AuthContextMap as AuthUIContextProvider } from '../../utils/AuthContextMap';
 
 describe('Self Registration Process', () => {
-
     it('Self registration to test Componet render without crash', () => {
         Object.defineProperty(window, 'location', {
             get() {
@@ -34,6 +33,6 @@ describe('Self Registration Process', () => {
         const nextAction = screen.getByTestId('nextAction');
         fireEvent.click(nextAction);
 
-        expect(screen.getByText("Create Password")).toBeInTheDocument()
+        expect(screen.getByText('Create Password')).toBeInTheDocument();
     });
 });

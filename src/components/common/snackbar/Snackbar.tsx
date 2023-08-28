@@ -7,19 +7,19 @@ const CustomizedSnackbar: React.FC<React.PropsWithChildren<any>> = (props) => {
 
     return (
         <>
-                <Snackbar
-                    data-testid="customSnackbar"
-                    open={open}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={5000}
-                    onClose={removeToast}
-                    action={
-                        <Button color="primary" size="small" onClick={removeToast}>
-                            OK
-                        </Button>
-                    }
-                    message={message}
-                />
+            <Snackbar
+                data-testid="customSnackbar"
+                open={open}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                autoHideDuration={5000}
+                onClose={removeToast}
+                action={
+                    <Button color="primary" size="small" onClick={removeToast}>
+                        OK
+                    </Button>
+                }
+                message={message}
+            />
         </>
     );
 };

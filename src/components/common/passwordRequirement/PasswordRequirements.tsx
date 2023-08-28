@@ -10,7 +10,7 @@ export const PasswordStyle = (): SxProps<Theme> => ({
     fontSize: '12px',
     lineHeight: '16px',
     fontFamily: 'Open Sans',
-    letterSpacing: '0'
+    letterSpacing: '0',
 });
 
 export type PasswordRequirementsProps = HTMLAttributes<HTMLDivElement> & {
@@ -28,11 +28,11 @@ export const PasswordRequirements: React.FC<
         <Box {...otherProps}>
             {passwordRequirements.map((req, ind) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }} key={`password_requirement_${ind}`}>
-                    <Check color={new RegExp(req.regex).test(passwordText) ? 'primary' : 'disabled'} sx={{ mr: '10px' }} />
-                    <Typography
-                        variant={'subtitle2'}
-                        sx={PasswordStyle()}
-                    >
+                    <Check
+                        color={new RegExp(req.regex).test(passwordText) ? 'primary' : 'disabled'}
+                        sx={{ mr: '10px' }}
+                    />
+                    <Typography variant={'subtitle2'} sx={PasswordStyle()}>
                         {req.description}
                     </Typography>
                 </Box>

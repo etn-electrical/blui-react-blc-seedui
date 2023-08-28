@@ -16,9 +16,16 @@ export type AcceptEulaProps = {
 export type AccountDetailsWrapperProps = {
     description?: string;
 };
+
+export type AccountDetails = {
+    firstName: string;
+    lastName: string;
+    phoneNumber?: string | number;
+};
+
 export type AccountDetailsProps = {
-    onDetailsChanged: (details: any) => void;
-    initialDetails?: any;
+    onDetailsChanged: (details: AccountDetails) => void;
+    initialDetails?: AccountDetails;
     onSubmit?: () => void;
 };
 
@@ -38,6 +45,6 @@ export type RegistrationCompleteProps = {
 export type RegistrationResponseSites = {
     siteId: string;
     siteName: string;
-    roles: Array<({roleName: string})>;
+    roles: Array<{ roleName: string }>;
     roleName: string;
-}
+};

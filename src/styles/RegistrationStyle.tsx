@@ -20,7 +20,7 @@ export const RegContainerStyles = (theme: Theme): SxProps<Theme> => ({
 export const RegSubDescriptionStyle = (theme: Theme): SxProps<Theme> => ({
     fontSize: '16px',
     fontFamily: 'Open Sans',
-    lineHeight: '24px'
+    lineHeight: '24px',
 });
 
 export const DialogTitleStyles = (theme: Theme): SxProps<Theme> => ({
@@ -31,7 +31,7 @@ export const DialogTitleStyles = (theme: Theme): SxProps<Theme> => ({
     '& .MuiTypography-root': {
         fontFamily: 'Open Sans',
         fontSize: '20px',
-    }
+    },
 });
 
 export const DialogContentStyles = (theme: Theme): SxProps<Theme> => ({
@@ -53,6 +53,5 @@ export const RegistrationContainerStyle = (theme: Theme): SxProps<Theme> => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor:
-        theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.dark
-})
+    backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.dark,
+});

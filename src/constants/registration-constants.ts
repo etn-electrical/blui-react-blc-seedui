@@ -30,6 +30,4 @@ export const EMAIL_REGEX = /^[A-Z0-9._%+'-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export const ADMIN_CONSTANTS = ['admin', 'organization'];
 
-export const ERROR_MSG = 'Something went wrong.'
-
-
+export const ERROR_MSG = 'Something went wrong.';

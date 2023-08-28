@@ -5,17 +5,19 @@ import { SelfRegistration } from '../components/pages/self-invite-registration/S
 import { Registration } from '../components/pages/admin-invite-registration/Registration';
 import { SelfInvite } from '../components/pages/self-invite/SelfInvite';
 import { Login } from '../components/pages/login/Login';
+import { OktaLogin } from '../components/pages/okta/Okta';
 
 export type RouteConfig = {
     LOGIN?: string;
     INVITE_REGISTER?: string;
     SELF_INVITE?: string;
     SELF_REGISTRATION?: string;
+    OKTA_CALLBACK?: string;
 };
 export type NavigationContainerComponentProps = {
     routeConfig?: RouteConfig;
     extraRoutes?: JSX.Element[];
-    children?: any
+    children?: React.ReactNode;
 };
 
 const defaultRoutes: Required<RouteConfig> = {
@@ -23,6 +25,7 @@ const defaultRoutes: Required<RouteConfig> = {
     INVITE_REGISTER: '/inviteregistration',
     SELF_INVITE: '/selfinvite',
     SELF_REGISTRATION: '/selfregistration',
+    OKTA_CALLBACK: '/callback/authcode',
 };
 
 const prefixRoutes = (routes: RouteConfig): { routes: Required<RouteConfig>; routesArray: string[] } => {
@@ -39,17 +42,13 @@ const prefixRoutes = (routes: RouteConfig): { routes: Required<RouteConfig>; rou
     return { routes: newRoutes, routesArray: newRoutesArray };
 };
 
-
 export const AuthNavigationContainer: React.FC<
     React.PropsWithChildren<React.PropsWithChildren<NavigationContainerComponentProps>>
 > = (props) => {
     const injectedContext = useInjectedUIContext();
     const { routeConfig, children } = props;
-   
-    const {
-        showInviteRegistration = true,
-        showSelfRegistration = true,
-    } = injectedContext;
+
+    const { showInviteRegistration = true, showSelfRegistration = true } = injectedContext;
 
     const { routes } = prefixRoutes({ ...defaultRoutes, ...routeConfig });
 
@@ -59,10 +58,8 @@ export const AuthNavigationContainer: React.FC<
         <BrowserRouter>
             <Routes>
                 <>
-                    <Route
-                        path={routes.LOGIN}
-                        element={<Login />}
-                    />
+                    <Route path={routes.LOGIN} element={<Login />} />
+                    <Route path={routes.OKTA_CALLBACK} element={<OktaLogin />} />
 
                     <Route
                         path={routes.INVITE_REGISTER}
@@ -78,11 +75,9 @@ export const AuthNavigationContainer: React.FC<
                         element={<>{showSelfRegistration ? <SelfRegistration /> : RedirectToLogin}</>}
                     />
                 </>
-               
+
                 <Route path={'*'} element={<>{children}</>} />
-
             </Routes>
-
         </BrowserRouter>
     );
 };

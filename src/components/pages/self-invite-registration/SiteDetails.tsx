@@ -5,16 +5,17 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 
-import { getAllCountries, getStatesOfCountry } from  '../../../utils/common';
+import { getAllCountries, getStatesOfCountry } from '../../../utils/common';
 import { TextFieldStyles, StateInputField } from '../self-invite/SelfRegistrationStyle';
 import { AccDividerStyles } from './SelfRegistrationStyle';
 import { AutoComplete } from '../../common/autocomplete/AutoComplete';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';
+import { SiteOrgDetailsType } from '../../../types/selfinvite-types';
 
 type SiteDetailsProps = {
-    setOrgDetails: (details: any) => void;
-    orgDetails: any;
-}
+    setOrgDetails: (details: SiteOrgDetailsType) => void;
+    orgDetails: SiteOrgDetailsType;
+};
 export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = (props) => {
     const { setOrgDetails, orgDetails } = props;
     const theme = useTheme();
@@ -22,27 +23,29 @@ export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = 
     const [address, setAddress] = React.useState(orgDetails.address || '');
     const [address2, setAddress2] = React.useState(orgDetails.address2 || '');
     const [city, setCity] = React.useState(orgDetails.city || '');
-    const [state, setState] = React.useState<any>(orgDetails.state)
-    const [postalCode, setCode] = React.useState(orgDetails.postalCode || '')
-    const [country, setCountry] = React.useState(orgDetails.country)
+    const [state, setState] = React.useState<any>(orgDetails.state);
+    const [postalCode, setCode] = React.useState(orgDetails.postalCode || '');
+    const [country, setCountry] = React.useState(orgDetails.country);
 
     useEffect((): void => {
         setOrgDetails({ address, city, postalCode, country, state, address2 });
     }, [address, city, state, postalCode, country, address2]);
 
-
     const countryList = useMemo(() => {
-        const countryOption = getAllCountries()
-        return countryOption.map(item => ({ name: item.name, id: item.isoCode }))
-    }, [])
+        const countryOption = getAllCountries();
+        return countryOption.map((item) => ({ name: item.name, id: item.isoCode }));
+    }, []);
+
     const stateList = useMemo(() => {
-        const stateOption = getStatesOfCountry(country.id)
-        return stateOption.map(item => ({ name: item.name, id: item.name }))
-    }, [country])
+        const stateOption = getStatesOfCountry(country.id);
+        return stateOption.map((item) => ({ name: item.name, id: item.name }));
+    }, [country]);
 
     return (
         <>
-            <Typography sx={RegSubDescriptionStyle(theme)}>Enter your new Organization details below to continue with account registration.</Typography>
+            <Typography sx={RegSubDescriptionStyle(theme)}>
+                Enter your new Organization details below to continue with account registration.
+            </Typography>
             <Divider sx={AccDividerStyles(theme)} />
             <>
                 <TextField
@@ -93,7 +96,7 @@ export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = 
                         data-testid="state"
                         options={stateList}
                         value={state?.id ? state : null}
-                        onValueSelect={(value: any): void => {
+                        onValueSelect={(value: { name: string; id: string }): void => {
                             setState(value);
                         }}
                         sx={StateInputField(theme)}
@@ -121,9 +124,9 @@ export const SiteDetails: React.FC<React.PropsWithChildren<SiteDetailsProps>> = 
                     label={'Country/Territory'}
                     options={countryList}
                     value={country}
-                    onValueSelect={(value: any): void => {
+                    onValueSelect={(value: { name: string; id: string }): void => {
                         setCountry(value);
-                        setState({})
+                        setState({});
                     }}
                     sx={TextFieldStyles(theme)}
                     disableClearable={true}

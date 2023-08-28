@@ -12,10 +12,9 @@ jest.mock('../api/login', () => ({
 describe('Routing', () => {
     it('Routing component render', () => {
         render(
-                <AuthUIContextProvider>
-                    <AuthNavigationContainer />
-                </AuthUIContextProvider>
+            <AuthUIContextProvider>
+                <AuthNavigationContainer />
+            </AuthUIContextProvider>
         );
     });
-
 });

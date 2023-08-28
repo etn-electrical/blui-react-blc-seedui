@@ -5,34 +5,46 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Link } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
 
+import { Link } from 'react-router-dom';
+
+import { useTheme } from '@mui/material/styles';
 import { BrandedCardContainer } from '../../common/cardContainer/BrandedCardContainer';
 import { TextField } from '../../common/textField/TextField';
 import cyberBadge from '../../../assets/cybersecurity_certified.png';
 import projectImage from '../../../assets/login-logo.png';
 import { useInjectedUIContext } from '../../../index';
-import { loginUser } from '../../../api/login';
+import { loginUser, oktaLoginUser } from '../../../api/login';
 import { EMAIL_REGEX, ERROR_MSG } from '../../../constants/registration-constants';
+import { LoginUserType } from '../../../types/login-types';
 import { LocationSiteProps } from '../../../types/admininvite-types';
 import { getAdminInviteSite } from '../../../api/admin-invite-register';
-import { SupportStyles, LinkStyles, LinksWrapperStyles, LoginContainerStyles, EmailFieldStyles, ActionStyles } from './loginStyle';
+import {
+    SupportStyles,
+    LinkStyles,
+    LinksWrapperStyles,
+    LoginContainerStyles,
+    EmailFieldStyles,
+    ActionStyles,
+} from './loginStyle';
 import { LocalStorage } from '../../../utils/local-storage';
+import { codeChallenge, codeVerifier } from '../../../utils/common';
 import CustomizedSnackbar from '../../common/snackbar/Snackbar';
+import { config, oktaConfig } from '../../../app-config';
 
 export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const injectedContext = useInjectedUIContext();
     const theme = useTheme();
-    const [passwordInput, setPasswordInput] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const [emailInput, setEmailInput] = React.useState('');
     const [rememberMe, setRememberMe] = React.useState(false);
     const [isValidEmail, setIsValidEmail] = React.useState(false);
     const [isInValidCredential, setIsInValidCredential] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [loginSuccess, setLoginSuccess] = React.useState<{ message: string }>({ message: '' })
+    const [loginSuccess, setLoginSuccess] = React.useState<{ message: string }>({ message: '' });
 
     const { authActions, showSelfRegistration, authUIConfig } = injectedContext;
+    const { applicationId, adopterId, clientid, redirectUri } = authUIConfig;
 
     useEffect(() => {
         const { rememberMe = false, email } = LocalStorage.getRememberMe();
@@ -41,7 +53,7 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
             setEmailInput(email);
             setIsValidEmail(EMAIL_REGEX.test(email));
         }
-    }, [])
+    }, []);
 
     const hasEmailError = useCallback(
         (): boolean => emailInput.length !== 0 && !isValidEmail,
@@ -50,55 +62,84 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
 
     const getEmailHelperText = (): string => {
         if (isInValidCredential) {
-            return 'Invalid Credentials'
+            return 'Invalid Credentials';
         } else if (hasEmailError()) {
-            return 'Please enter a valid email'
+            return 'Please enter a valid email';
         }
-        return ''
+        return '';
     };
 
     const loginTapped = async () => {
         setLoading(true);
-        const response: any = await loginUser({
-            user: emailInput,
-            password: passwordInput,
-            applicationId: authUIConfig.applicationId,
-            adopterId: authUIConfig.adopterId
-        })
+        const response: LoginUserType = await loginUser({ user: emailInput, password, applicationId, adopterId });
         if (response.status === 200) {
             processResponse(response);
-        } else if (response.status === 404 || response.status === 0) {
-            setIsInValidCredential(true)
         } else {
-            setLoginSuccess({ message: ERROR_MSG });
+            response.status === 404 || response.status === 0
+                ? setIsInValidCredential(true)
+                : setLoginSuccess({ message: ERROR_MSG });
         }
         setLoading(false);
+    };
 
-    }
+    // const loginTapped = async () => {
+    //     setLoading(true);
+    //     const response: any = await oktaLoginUser({
+    //         username: emailInput,
+    //         password: password,
+    //         options: {
+    //             multiOptionalFactorEnroll: true,
+    //             warnBeforePasswordExpired: true,
+    //         },
+    //     });
+    //     if (response.status === 200) {
+    //         processOktaToken(response);
+    //     } else {
+    //         response.status === 404 || response.status === 0 ? setIsInValidCredential(true) : setLoginSuccess({ message: ERROR_MSG });
+    //     }
+    //     setLoading(false);
+    // };
 
-    const processResponse = (response: any) => {
-        const { token, adminRoleId } = response.response;
-        LocalStorage.setAuthTocken(token, adminRoleId);
+    // const getOktaConfig = async () => {
+    //     const { scope, state, response_type, code_challenge_method } = oktaConfig;
+    //     const code_verifier = codeVerifier();
+    //     const code_challenge: any = await codeChallenge(code_verifier);
+    //     return {
+    //         scope, state, response_type, code_challenge_method, code_verifier, code_challenge
+    //     }
+    // }
+
+    // const processOktaToken = async (response: any) => {
+    //     const { sessionToken } = response.response;
+    //     const { scope, state, response_type, code_challenge_method, code_verifier, code_challenge } = await getOktaConfig();
+    //     LocalStorage.setCodeVerifier(code_verifier, code_challenge);
+    //     LocalStorage.setRememberMe(rememberMe, emailInput);
+    //     window.location.href = `${config.oktaUrl}/oauth2/aus3x5jojewaRZEnQ1d7/v1/authorize?client_id=${clientid}&response_type=${response_type}&scope=${scope}&redirect_uri=${redirectUri}&state=${state}&sessionToken=${sessionToken}&code_challenge_method=${code_challenge_method}&code_challenge=${code_challenge}`;
+    // }
+
+    const processResponse = (response: LoginUserType) => {
+        const { token, adminRoleId, id_token } = response.response;
+        LocalStorage.setAuthTocken(token, adminRoleId, id_token);
         LocalStorage.setRememberMe(rememberMe, emailInput);
         authActions().logIn(response.response);
-    }
+    };
 
     return (
         <BrandedCardContainer loading={loading}>
             <CustomizedSnackbar
                 open={!!loginSuccess.message.length}
                 message={loginSuccess.message}
-                removeToast={(event: Event) => setLoginSuccess({ message: '' })} />
-            <form onSubmit={(evt): void => { evt.preventDefault(); loginTapped() }}>
-                <Box sx={LoginContainerStyles(theme)} >
-
+                removeToast={(event: Event) => setLoginSuccess({ message: '' })}
+            />
+            <form
+                onSubmit={(evt): void => {
+                    evt.preventDefault();
+                    loginTapped();
+                }}
+            >
+                <Box sx={LoginContainerStyles(theme)}>
                     <Box sx={{ mb: 6 }}>
-                        <Box
-                            component="img"
-                            sx={{ maxWidth: '100%', maxHeight: 80 }}
-                            src={projectImage}
-                            alt="logo"
-                        />
+                        <Box component="img" sx={{ maxWidth: '100%', maxHeight: 80 }} src={projectImage} alt="logo" />
                     </Box>
 
                     <TextField
@@ -108,7 +149,7 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
                         type={'email'}
                         sx={EmailFieldStyles(theme)}
                         value={emailInput}
-                        onChange={(evt: any) => {
+                        onChange={(evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                             const { value } = evt.target;
                             setIsValidEmail(EMAIL_REGEX.test(value));
                             setEmailInput(value);
@@ -126,9 +167,9 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
                             mb: `${(parseInt(theme.spacing(3)) + 16).toString()}px`,
                         }}
                         type={'password'}
-                        value={passwordInput}
-                        onChange={(evt: any) => {
-                            setPasswordInput(evt.target.value);
+                        value={password}
+                        onChange={(evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                            setPassword(evt.target.value);
                             setIsInValidCredential(false);
                         }}
                         variant="filled"
@@ -143,7 +184,6 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
                         justifyContent="space-between"
                         sx={ActionStyles(theme)}
                     >
-
                         <FormControlLabel
                             sx={{ [theme.breakpoints.down('sm')]: { mr: 0 } }}
                             control={
@@ -160,7 +200,7 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
                             variant="contained"
                             data-testid="submit"
                             disableElevation
-                            disabled={!EMAIL_REGEX.test(emailInput) || !passwordInput}
+                            disabled={!EMAIL_REGEX.test(emailInput) || !password}
                             color="primary"
                             sx={{ width: 150 }}
                         >
@@ -172,19 +212,17 @@ export const Login: React.FC<React.PropsWithChildren<React.PropsWithChildren<unk
                         <Typography variant="body2" sx={{ mt: 0 }}>
                             Need an account?
                         </Typography>
-                        {showSelfRegistration ?
+                        {showSelfRegistration ? (
                             <Typography variant="body2" color={'primary'} sx={{ mb: 4, mt: 1 }}>
-                                <Box
-                                    component={Link}
-                                    sx={LinkStyles(theme)}
-                                    to={'/selfinvite'}>
+                                <Box component={Link} sx={LinkStyles(theme)} to={'/selfinvite'}>
                                     Self Registration
                                 </Box>
-                            </Typography> :
+                            </Typography>
+                        ) : (
                             <Typography variant="body2" sx={SupportStyles()}>
                                 Contact an Eaton Support Representative
                             </Typography>
-                        }
+                        )}
                     </Box>
                     <Box
                         component="img"

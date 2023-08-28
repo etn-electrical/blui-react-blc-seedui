@@ -1,4 +1,3 @@
-
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const FullDividerStyles = (theme: Theme): SxProps<Theme> => ({
@@ -14,8 +13,8 @@ export const TextFieldStyles = (theme: Theme, first?: boolean): SxProps<Theme> =
         mt: 3,
     },
     '& .MuiFormLabel-root': {
-        fontFamily: 'Open Sans'
-    }
+        fontFamily: 'Open Sans',
+    },
 });
 
 export const DialogActionsStyles = (theme: Theme): SxProps<Theme> => ({
@@ -26,7 +25,6 @@ export const DialogActionsStyles = (theme: Theme): SxProps<Theme> => ({
     },
 });
 
-
 export const DialogButtonStyles = (fullWidth = false, visible = true): SxProps<Theme> => ({
     width: fullWidth ? '90%' : 90,
     visibility: visible ? 'visible' : 'hidden',
@@ -35,10 +33,10 @@ export const DialogButtonStyles = (fullWidth = false, visible = true): SxProps<T
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: '14px',
-    '& .Mui-disabled' : {
+    '& .Mui-disabled': {
         backgroundColor: '#e0eef8',
-        color: '#80bde0'
-    }
+        color: '#80bde0',
+    },
 });
 
 export const StepperStyles = {
@@ -56,7 +54,7 @@ export const EulaContent = () => ({
     overflow: 'auto',
     fontSize: '16px',
     lineHeight: '24px',
-    fontFamily: 'Open Sans'
+    fontFamily: 'Open Sans',
 });
 
 export const EulaAction = () => ({
@@ -66,16 +64,13 @@ export const EulaAction = () => ({
     '& .MuiTypography-root': {
         fontSize: '15px',
         lineHeight: '18px',
-        fontFamily: 'Open Sans'
+        fontFamily: 'Open Sans',
     },
-    '& .MuiSvgIcon-root':{
+    '& .MuiSvgIcon-root': {
         width: '18px',
-        height: '18px'
-    }
+        height: '18px',
+    },
 });
-
-
-
 
 export const DialogButtonStyle = (visible = true): SxProps<Theme> => ({
     width: '100%',
@@ -89,29 +84,27 @@ export const DialogButtonStyle = (visible = true): SxProps<Theme> => ({
     textTransform: 'capitalize',
     flex: 'none',
     order: 0,
-    flexGrow: 0
+    flexGrow: 0,
 });
-
-
 
 export const RegCompleteContainerStyles = (theme: Theme): SxProps<Theme> => ({
     height: '100%',
     [theme.breakpoints.down('sm')]: {
         minHeight: 'auto',
     },
-    '& .MuiTypography-h6' : {
+    '& .MuiTypography-h6': {
         fontFamily: 'Open Sans',
         fontSize: '20px',
         fontWeight: '600',
-        color: '#424E54'
+        color: '#424E54',
     },
-    '& .MuiTypography-subtitle2' : {
+    '& .MuiTypography-subtitle2': {
         fontFamily: 'Open Sans',
         fontSize: '16px',
         fontWeight: '400',
         lineHeight: '24px',
-        color: '#424E54'
-    }
+        color: '#424E54',
+    },
 });
 
 export const OrgTxtStyles = (theme: Theme, pos?: string): SxProps<Theme> => ({
@@ -122,10 +115,8 @@ export const OrgTxtStyles = (theme: Theme, pos?: string): SxProps<Theme> => ({
     lineHeight: '24px',
     letterSpacing: '0.25px',
     color: '#424E54',
-    marginTop: pos === 'first' ? '51px' : ' 20px'
+    marginTop: pos === 'first' ? '51px' : ' 20px',
 });
-
-
 
 export const ReturnToLoginStyles = (): SxProps<Theme> => ({
     width: '402px',
@@ -133,6 +124,5 @@ export const ReturnToLoginStyles = (): SxProps<Theme> => ({
     fontFamily: 'Open Sans',
     fontStyle: 'normal',
     fontWeight: '600',
-    fontSize: '14px'
+    fontSize: '14px',
 });
-

@@ -1,15 +1,25 @@
 // @ts-nocheck
 import React from 'react';
 import { EmptyState } from '@brightlayer-ui/react-components';
-import { Button, CardActions, Divider } from '@mui/material';
+import Button from '@mui/material/Button';
+import CardActions from '@mui/material/CardActions';
+import Divider from '@mui/material/Divider';
+
 import { useTheme } from '@mui/material/styles';
-import { MarkEmailRead as MarkEmailReadIcon } from '@mui/icons-material';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 
 import { ContainerComponent } from '../../common/container/Container';
 import { InviteMoreButtonStyles, SuccessActionStyles, DialogButtonStyles } from './AdminInviteStyle';
 
-export const AdminInviteSuccess: React.FC<React.PropsWithChildren<any>> = (props: any) => {
+type AdminInviteSuccessProps = {
+    email: string[];
+    advancePage: (active: number) => void;
+    setEmail: (email: string[]) => void;
+};
 
+export const AdminInviteSuccess: React.FC<React.PropsWithChildren<AdminInviteSuccessProps>> = (
+    props: AdminInviteSuccessProps
+) => {
     const theme = useTheme();
     const { advancePage, email, setEmail } = props;
 
@@ -19,11 +29,9 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<any>> = (props
                 <EmptyState
                     icon={<MarkEmailReadIcon fontSize={'inherit'} sx={{ color: '#727E84' }} />}
                     title={'Invitation Sent!'}
-                    description={
-                        email.length > 1 ?
-                            `An email invitation has been sent to ${email.length} users, This link will be valid for 24 hours.` :
-                            `An email invitation has been sent to ${email.join(',')} user, This link will be valid for 24 hours.`
-                    }
+                    description={`An email invitation has been sent to ${
+                        email.length > 1 ? `${email.length} users` : `${email.join(',')} user`
+                    }, This link will be valid for 24 hours.`}
                     sx={{ minHeight: '75%' }}
                 />
 
@@ -32,9 +40,15 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<any>> = (props
                     <Button
                         variant="outlined"
                         color="primary"
-                        onClick={(): void => {setEmail([]); advancePage(-2)}}
+                        onClick={(): void => {
+                            setEmail([]);
+                            advancePage(-2);
+                        }}
                         sx={InviteMoreButtonStyles()}
-                    > Invite More...</Button>
+                    >
+                        {' '}
+                        Invite More...
+                    </Button>
 
                     <Button
                         variant="contained"
@@ -42,11 +56,12 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<any>> = (props
                         data-testid="nextAction"
                         disableElevation
                         sx={DialogButtonStyles()}
-                    > Finish </Button>
-
+                    >
+                        {' '}
+                        Finish{' '}
+                    </Button>
                 </CardActions>
-
             </ContainerComponent>
         </>
-    )
-}
+    );
+};

@@ -6,23 +6,21 @@ import { SiteOptions } from '../../components/pages/self-invite-registration/Sit
 import { AuthContextMap as AuthUIContextProvider } from '../../utils/AuthContextMap';
 
 describe('Join an Organization', () => {
-
     it('to test join an organization page is Loading', () => {
         render(
             <AuthUIContextProvider>
-                <SiteOptions onSubmit={() => { }} />
+                <SiteOptions onSubmit={() => {}} />
             </AuthUIContextProvider>
         );
-
     });
 
     it('to test creation of new organization', () => {
         render(
             <AuthUIContextProvider>
-                <SiteOptions onSubmit={() => { }} />
+                <SiteOptions onSubmit={() => {}} />
             </AuthUIContextProvider>
         );
 
-        expect(screen.getByText("Create a New Organization")).toBeInTheDocument()
+        expect(screen.getByText('Create a New Organization')).toBeInTheDocument();
     });
 });

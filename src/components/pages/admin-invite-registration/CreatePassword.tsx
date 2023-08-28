@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, ChangeEvent, useCallback } from 'react';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+
 import { useTheme } from '@mui/material/styles';
 
 import { SecureTextField } from '../../common/secureTextField/SecureTextField';
@@ -10,7 +11,9 @@ import { defaultPasswordRequirements } from '../../../constants/registration-con
 import { CreatePasswordProps } from '../../../types/registration-types';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';
 
-export const CreatePassword: React.FC<React.PropsWithChildren<React.PropsWithChildren<CreatePasswordProps>>> = (props) => {
+export const CreatePassword: React.FC<React.PropsWithChildren<React.PropsWithChildren<CreatePasswordProps>>> = (
+    props
+) => {
     const { onPasswordChanged, initialPassword = '', onSubmit } = props;
     const passwordRef = useRef(null);
     const confirmRef = useRef(null);
@@ -25,7 +28,6 @@ export const CreatePassword: React.FC<React.PropsWithChildren<React.PropsWithChi
         }
         return confirmInput === passwordInput;
     }, [passwordInput, confirmInput]);
-
 
     const onPassChange = useCallback(
         (newPassword: string) => {
@@ -47,7 +49,10 @@ export const CreatePassword: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <>
-            <Typography sx={RegSubDescriptionStyle(theme)}>Enter and confirm your password below to continue with account registration. Fields marked with an (*) are required.</Typography>
+            <Typography sx={RegSubDescriptionStyle(theme)}>
+                Enter and confirm your password below to continue with account registration. Fields marked with an (*)
+                are required.
+            </Typography>
 
             <Divider sx={FullDividerStyles(theme)} />
 

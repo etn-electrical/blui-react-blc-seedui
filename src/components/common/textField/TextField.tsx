@@ -11,10 +11,10 @@ type TextFieldProps = {
     required?: boolean;
     variant?: 'standard' | 'filled' | 'outlined';
     onChange: (e?: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-    error?: boolean
+    error?: boolean;
     helperText?: string;
     sx?: SxProps<Theme>;
-}
+};
 
 export const TextField: React.FC<React.PropsWithChildren<TextFieldProps>> = (props) => {
     const { sx, id, label, value, variant, name, type, required = false, onChange, error, helperText } = props;
@@ -33,5 +33,5 @@ export const TextField: React.FC<React.PropsWithChildren<TextFieldProps>> = (pro
             helperText={helperText}
             sx={sx}
         />
-    )
-}
+    );
+};

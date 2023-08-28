@@ -28,7 +28,7 @@ export const LoginContainerStyles = (theme: Theme): SxProps<Theme> => ({
 });
 
 export const EmailFieldStyles = (theme: Theme): SxProps<Theme> => ({
-    mb: `36px`
+    mb: `36px`,
 });
 
 export const ActionStyles = (theme: Theme): SxProps<Theme> => ({
@@ -38,7 +38,7 @@ export const ActionStyles = (theme: Theme): SxProps<Theme> => ({
         flexWrap: 'wrap',
         flexDirection: 'column',
         justifyContent: 'center',
-    }
+    },
 });
 
 export const SupportStyles = (): SxProps<Theme> => ({

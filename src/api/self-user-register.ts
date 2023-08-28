@@ -1,17 +1,18 @@
-import { HttpRequest } from "./http-request";
-import { config } from '../app-config';
-import { SelfInviteApiProps, SelfInviteRegisterApiProps } from '../types/selfinvite-types';
+import { HttpRequest } from './http-request';
+import { API_URL } from '../constants/ApiUrls';
+import {
+    SelfInviteApiProps,
+    SelfInviteRegisterApiProps,
+    PostSelfInviteType,
+    PostSelfUserRegisterType,
+} from '../types/selfinvite-types';
 
-export const postSelfInvite = async (body: SelfInviteApiProps) => {
-    const res = await HttpRequest.post({
-        resource: `${config.apiUrl}/registration/user/self/invitation`, body
-    });
+export const postSelfInvite = async (body: SelfInviteApiProps): Promise<PostSelfInviteType> => {
+    const res = await HttpRequest.post({ resource: API_URL.postSelfInvite, body });
     return await res.response;
 };
 
-export const postSelfUserRegister = async (body: SelfInviteRegisterApiProps) => {
-    const res = await HttpRequest.post({
-        resource: `${config.apiUrl}/registration/user/self/invitation/process`, body
-    });
+export const postSelfUserRegister = async (body: SelfInviteRegisterApiProps): Promise<PostSelfUserRegisterType> => {
+    const res = await HttpRequest.post({ resource: API_URL.postSelfUserRegister, body });
     return res;
 };

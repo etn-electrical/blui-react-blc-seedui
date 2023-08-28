@@ -15,18 +15,16 @@ export const AccountDetails: React.FC<React.PropsWithChildren<React.PropsWithChi
     const { onDetailsChanged, initialDetails, onSubmit } = props;
     const theme = useTheme();
 
-    const firstRef = useRef<any>(null);
-    const lastRef = useRef<any>(null);
-    const phoneRef = useRef<any>(null);
+    const firstRef = useRef(null);
+    const lastRef = useRef(null);
+    const phoneRef = useRef(null);
 
     const [firstNameInput, setFirstNameInput] = React.useState(initialDetails ? initialDetails.firstName : '');
     const [lastNameInput, setLastNameInput] = React.useState(initialDetails ? initialDetails.lastName : '');
     const [phoneNumber, setPhoneNumber] = React.useState(initialDetails ? initialDetails.phoneNumber : '');
 
-
     useEffect((): void => {
-        const valid = firstNameInput !== '' && lastNameInput !== '';
-        onDetailsChanged({ firstName: firstNameInput, lastName: lastNameInput, valid, phoneNumber });
+        onDetailsChanged({ firstName: firstNameInput, lastName: lastNameInput, phoneNumber });
     }, [onDetailsChanged, firstNameInput, lastNameInput, phoneNumber]);
 
     const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
@@ -38,7 +36,9 @@ export const AccountDetails: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <>
-            <Typography sx={RegSubDescriptionStyle(theme)}>Enter your details below to continue with account creation. Fields marked with an (*) are required.</Typography>
+            <Typography sx={RegSubDescriptionStyle(theme)}>
+                Enter your details below to continue with account creation. Fields marked with an (*) are required.
+            </Typography>
             <Divider sx={FullDividerStyles(theme)} />
             <TextField
                 required

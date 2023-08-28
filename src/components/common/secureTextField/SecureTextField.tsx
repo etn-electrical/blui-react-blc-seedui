@@ -5,10 +5,9 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
 export const SecureTextField: React.FC<React.PropsWithChildren<React.PropsWithChildren<TextFieldProps>>> = (props) => {
     const [showPassword, setShowPassword] = useState(false);
-    const {id} = props;
+    const { id } = props;
     return (
         <TextField
             type={showPassword ? 'text' : 'password'}

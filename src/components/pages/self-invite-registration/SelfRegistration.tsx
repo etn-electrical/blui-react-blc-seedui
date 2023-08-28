@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import MobileStepper from '@mui/material/MobileStepper';
 import Card from '@mui/material/Card';
+
 import { useTheme } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { isBefore } from 'date-fns';
@@ -19,14 +20,25 @@ import { SiteDetails } from './SiteDetails';
 import { SiteOptions } from './SiteOptions';
 import { NewOrganization } from './NewOrganization';
 import { SelfRegistrationComplete } from './SelfRegistrationComplete';
-import { DialogActionsStyles, DialogButtonStyles, StepperStyles, StepperDotStyles } from '../self-invite/SelfRegistrationStyle';
+import {
+    DialogActionsStyles,
+    DialogButtonStyles,
+    StepperStyles,
+    StepperDotStyles,
+} from '../self-invite/SelfRegistrationStyle';
 import { BackIconStyles } from './SelfRegistrationStyle';
-import { RegContainerStyles, DialogTitleStyles, DialogContentStyles, RegistrationContainerStyle } from '../../../styles/RegistrationStyle';
+import {
+    RegContainerStyles,
+    DialogTitleStyles,
+    DialogContentStyles,
+    RegistrationContainerStyle,
+} from '../../../styles/RegistrationStyle';
 
 import { SAMPLE_EULA } from '../admin-invite-registration/sampleEula';
 import { postSelfUserRegister } from '../../../api/self-user-register';
 import { useInjectedUIContext } from '../../../context/AuthContextProvider';
-import { RegistrationPage } from '../../../types/selfinvite-types';
+import { RegistrationPage, PostSelfUserRegisterType, SelfInviteSuccessProps } from '../../../types/selfinvite-types';
+import { AccountDetails as AccountDetailsTypes } from '../../../types/registration-types';
 import { Spinner } from '../../common/spinner/Spinner';
 import { RegistrationExpired } from './SelfRegistrationExpired';
 import { UserAccountFound } from './UserAccountFound';
@@ -35,25 +47,36 @@ export const SelfRegistration: React.FC = () => {
     const { authUIConfig, authActions } = useInjectedUIContext();
 
     const [password, setPassword] = useState('');
-    const [accountDetails, setAccountDetails] = useState({ firstName: '', lastName: '', phoneNumber: '' });
-    const [orgDetails, setOrgDetails] = useState<any>({ address: '', address2: '', city: '', state: {}, postalCode: '', country: { name: 'United States', id: 'US' } })
+    const [accountDetails, setAccountDetails] = useState<AccountDetailsTypes>({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+    });
+    const [orgDetails, setOrgDetails] = useState<any>({
+        address: '',
+        address2: '',
+        city: '',
+        state: {},
+        postalCode: '',
+        country: { name: 'United States', id: 'US' },
+    });
     const [loading, setLoading] = useState(false);
     const [eulaAccepted, setEulaAccepted] = useState(false);
-    const [orgName, setOrgName] = useState('')
+    const [orgName, setOrgName] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
-    const [responseData, setResponseData] = useState({});
+    const [responseData, setResponseData] = useState<SelfInviteSuccessProps>();
     const url = new URL(window.location.href);
     const existingUser = url.searchParams.get('isExistingUser') || '';
     const expiryTime = url.searchParams.get('expiryTime') || '';
     const theme = useTheme();
 
-    const eulaContent = useMemo(() => authActions().loadEula(), [authActions])
+    const eulaContent = useMemo(() => authActions().loadEula(), [authActions]);
 
     useEffect(() => {
         if (expiryTime && !isBefore(new Date(), Number(expiryTime) * 1000)) {
-            setCurrentPage(existingUser.toLowerCase() === 'true' ? 6: 7);
+            setCurrentPage(existingUser.toLowerCase() === 'true' ? 6 : 7);
         }
-    }, [])
+    }, []);
 
     const RegistrationScreens: RegistrationPage[] = [
         {
@@ -89,7 +112,9 @@ export const SelfRegistration: React.FC = () => {
                 <AccountDetails
                     onDetailsChanged={setAccountDetails}
                     initialDetails={accountDetails}
-                    onSubmit={accountDetails.firstName && accountDetails.lastName ? (): void => advancePage(1) : undefined}
+                    onSubmit={
+                        accountDetails.firstName && accountDetails.lastName ? (): void => advancePage(1) : undefined
+                    }
                 />
             ),
             canGoForward: accountDetails.firstName.length > 0 && accountDetails.lastName.length > 0,
@@ -98,83 +123,60 @@ export const SelfRegistration: React.FC = () => {
         {
             name: 'AccountFound',
             pageTitle: 'Account Found',
-            pageBody: (
-                <UserAccountFound />
-            ),
+            pageBody: <UserAccountFound />,
             canGoForward: true,
             canGoBack: true,
         },
         {
             name: 'Site Options',
             pageTitle: 'Join an Organization',
-            pageBody: (
-                <SiteOptions
-                    onSubmit={(): void => advancePage(1)}
-                />
-            ),
+            pageBody: <SiteOptions onSubmit={(): void => advancePage(1)} />,
             canGoForward: true,
             canGoBack: true,
-            actionDisable: true
+            actionDisable: true,
         },
         {
             name: 'New Organization',
             pageTitle: 'Create an Organization',
-            pageBody: (
-                <NewOrganization
-                    setOrgName={setOrgName}
-                    orgName={orgName}
-                />
-            ),
+            pageBody: <NewOrganization setOrgName={setOrgName} orgName={orgName} />,
             canGoForward: orgName.length >= 3,
             canGoBack: true,
         },
         {
             name: 'Organization Details',
             pageTitle: 'Organization Details',
-            pageBody: (
-                <SiteDetails
-                    orgDetails={orgDetails}
-                    setOrgDetails={setOrgDetails}
-                />
-            ),
+            pageBody: <SiteDetails orgDetails={orgDetails} setOrgDetails={setOrgDetails} />,
             canGoForward: true,
             canGoBack: true,
-            lastScreen: true
+            lastScreen: true,
         },
         {
             name: 'Registration Completion',
             pageTitle: 'Account & Organization Created',
-            pageBody: (
-                <SelfRegistrationComplete
-                    responseData={responseData}
-                />
-            ),
+            pageBody: <SelfRegistrationComplete responseData={responseData} />,
             canGoForward: false,
             canGoBack: false,
-            actionDisable: true
+            actionDisable: true,
         },
         {
             name: 'Expired',
             pageTitle: 'Registration Link Expired',
-            pageBody: (
-                <RegistrationExpired />
-            ),
+            pageBody: <RegistrationExpired />,
             canGoForward: true,
             canGoBack: false,
-            actionDisable: true
-        }
-    ]
+            actionDisable: true,
+        },
+    ];
 
     const RegistrationPages = useMemo(() => {
         if (existingUser.toLowerCase() === 'true') {
-            RegistrationScreens.splice(1, 2)
+            RegistrationScreens.splice(1, 2);
             return RegistrationScreens;
         } else {
             RegistrationScreens.splice(3, 1);
             return RegistrationScreens;
         }
-    }, [url.searchParams])
-
+    }, [url.searchParams]);
 
     const userRegistration = async () => {
         const { adopterId } = authUIConfig;
@@ -185,7 +187,7 @@ export const SelfRegistration: React.FC = () => {
             userDetails: {
                 firstName: accountDetails.firstName,
                 lastName: accountDetails.lastName,
-                phoneNumber: accountDetails.phoneNumber
+                phoneNumber: accountDetails.phoneNumber,
             },
             siteDetails: {
                 siteName: orgName,
@@ -194,19 +196,19 @@ export const SelfRegistration: React.FC = () => {
                 city: orgDetails.city,
                 country: orgDetails.country?.name,
                 state: orgDetails.state?.name,
-                postalCode: orgDetails.postalCode
-            }
-        }
+                postalCode: orgDetails.postalCode,
+            },
+        };
         setLoading(true);
-        const response: any = await postSelfUserRegister(request);
+        const response: PostSelfUserRegisterType = await postSelfUserRegister(request);
         if (response.status === 200) {
             setCurrentPage(currentPage + 1);
-            response && response.response && setResponseData(response.response.data)
+            response && response.response && setResponseData(response.response.data);
         } else {
             setCurrentPage(currentPage + 2);
         }
         setLoading(false);
-    }
+    };
 
     const advancePage = (delta = 0): void => {
         if ((currentPage !== 0 && delta === -1) || (currentPage !== RegistrationPages.length - 1 && delta === 1)) {
@@ -218,36 +220,55 @@ export const SelfRegistration: React.FC = () => {
         }
     };
 
-
     const isLastStep = currentPage === RegistrationPages.length - 1;
     const canProgress = (): boolean => RegistrationPages[currentPage].canGoForward ?? false;
 
     return (
         <Box sx={RegistrationContainerStyle(theme)}>
             <Spinner visible={loading} />
-            <Card sx={RegContainerStyles(theme)} >
+            <Card sx={RegContainerStyles(theme)}>
                 <CardHeader
-                    avatar={RegistrationPages[currentPage].name === 'Site Options' && <ArrowBackIcon color={'primary'} sx={BackIconStyles()} onClick={(): void => advancePage(-1)} />}
-                    title={<Typography variant={'h6'} sx={{ fontWeight: 600 }}> {RegistrationPages[currentPage].pageTitle || ''} </Typography>}
+                    avatar={
+                        RegistrationPages[currentPage].name === 'Site Options' && (
+                            <ArrowBackIcon
+                                color={'primary'}
+                                sx={BackIconStyles()}
+                                onClick={(): void => advancePage(-1)}
+                            />
+                        )
+                    }
+                    title={
+                        <Typography variant={'h6'} sx={{ fontWeight: 600 }}>
+                            {' '}
+                            {RegistrationPages[currentPage].pageTitle || ''}{' '}
+                        </Typography>
+                    }
                     sx={DialogTitleStyles(theme)}
                 />
                 <CardContent sx={DialogContentStyles(theme)}>{RegistrationPages[currentPage].pageBody}</CardContent>
-                {!RegistrationPages[currentPage].actionDisable &&
-                    <><Divider />
+                {!RegistrationPages[currentPage].actionDisable && (
+                    <>
+                        <Divider />
                         <CardActions sx={DialogActionsStyles(theme)}>
                             <MobileStepper
                                 variant={'dots'}
                                 position={'static'}
                                 steps={existingUser.toLowerCase() === 'true' ? 2 : currentPage <= 3 ? 3 : 2}
-                                activeStep={existingUser.toLowerCase() === 'true' ? currentPage + (currentPage <= 2 ? 0 : -3) : currentPage + (currentPage <= 3 ? 0 : -4)}
-
+                                activeStep={
+                                    existingUser.toLowerCase() === 'true'
+                                        ? currentPage + (currentPage <= 2 ? 0 : -3)
+                                        : currentPage + (currentPage <= 3 ? 0 : -4)
+                                }
                                 backButton={
                                     <Button
                                         variant="outlined"
                                         color="primary"
                                         onClick={(): void => advancePage(-1)}
                                         sx={DialogButtonStyles(false, currentPage !== 0)}
-                                    > Back </Button>
+                                    >
+                                        {' '}
+                                        Back{' '}
+                                    </Button>
                                 }
                                 nextButton={
                                     <Button
@@ -258,15 +279,17 @@ export const SelfRegistration: React.FC = () => {
                                         disabled={!canProgress()}
                                         onClick={(): void => advancePage(1)}
                                         sx={DialogButtonStyles(false)}
-                                    > {RegistrationPages[currentPage].lastScreen ? 'Finish' : 'Next'} </Button>
+                                    >
+                                        {' '}
+                                        {RegistrationPages[currentPage].lastScreen ? 'Finish' : 'Next'}{' '}
+                                    </Button>
                                 }
                                 sx={{ ...StepperStyles, '& .MuiMobileStepper-dot': StepperDotStyles(theme) }}
                             />
                         </CardActions>
                     </>
-                }
+                )}
             </Card>
         </Box>
-    )
-
-}
+    );
+};

@@ -6,7 +6,6 @@ import { Registration } from '../../components/pages/admin-invite-registration/R
 import { AuthContextMap as AuthUIContextProvider } from '../../utils/AuthContextMap';
 
 describe('Self Registration Process', () => {
-
     it('to test join an organization page', () => {
         Object.defineProperty(window, 'location', {
             get() {
@@ -19,7 +18,6 @@ describe('Self Registration Process', () => {
                 <Registration />
             </AuthUIContextProvider>
         );
-
     });
 
     it('check Eula Page', () => {

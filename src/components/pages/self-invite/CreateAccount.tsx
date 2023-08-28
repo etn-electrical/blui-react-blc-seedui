@@ -2,30 +2,33 @@ import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/material/styles';
 
 import { FullDividerStyles, TextFieldStyles } from './SelfRegistrationStyle';
+import { useTheme } from '@mui/material/styles';
 import { isValidEmail } from '../../../utils/common';
 import { CreateAccountProps } from '../../../types/selfinvite-types';
 import { RegSubDescriptionStyle } from '../../../styles/RegistrationStyle';
 
-
-export const CreateAccount: React.FC<React.PropsWithChildren<React.PropsWithChildren<CreateAccountProps>>> = (props) => {
+export const CreateAccount: React.FC<React.PropsWithChildren<React.PropsWithChildren<CreateAccountProps>>> = (
+    props
+) => {
     const { initialEmail, onEmailChanged, onSubmit } = props;
     const theme = useTheme();
 
     const [emailInput, setEmailInput] = useState(initialEmail ?? '');
     const showEmailError = emailInput.length !== 0 && !isValidEmail(emailInput);
 
-
     return (
         <>
-            <Typography sx={RegSubDescriptionStyle(theme)}>To register a new account, we first need to verify your email address. Fields marked with an (*) are required.</Typography>
+            <Typography sx={RegSubDescriptionStyle(theme)}>
+                To register a new account, we first need to verify your email address. Fields marked with an (*) are
+                required.
+            </Typography>
             <Divider sx={FullDividerStyles(theme)} />
             <TextField
-             required
+                required
                 id="email"
-                label='Email Address'
+                label="Email Address"
                 data-testid="email"
                 fullWidth
                 value={emailInput}

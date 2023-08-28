@@ -5,7 +5,6 @@ import { Spinner } from '../spinner/Spinner';
 import backgroundImage from '../../../assets/background.svg';
 import Box from '@mui/material/Box';
 
-
 export const BrandedBackground: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = (props) => {
     const theme = useTheme();
 
@@ -30,7 +29,6 @@ export const BrandedBackground: React.FC<React.PropsWithChildren<React.PropsWith
 export type BrandedCardContainerProps = {
     loading?: boolean;
 };
-
 
 export const BrandedCardContainer: React.FC<
     React.PropsWithChildren<React.PropsWithChildren<BrandedCardContainerProps>>

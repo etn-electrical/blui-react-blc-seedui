@@ -7,19 +7,17 @@ export const FullDividerStyles = (theme: Theme): SxProps<Theme> => ({
     },
 });
 
-
 export const DialogActionsStyles = (theme: Theme): SxProps<Theme> => ({
     p: 3,
     justifyContent: 'flex-end',
     [theme.breakpoints.down('sm')]: {
         p: 2,
     },
-    '& .Mui-disabled' : {
+    '& .Mui-disabled': {
         backgroundColor: '#e0eef8 !important',
-        color: '#80bde0'
-    }
+        color: '#80bde0',
+    },
 });
-
 
 export const DialogButtonStyles = (fullWidth = false, visible = true): SxProps<Theme> => ({
     width: fullWidth ? '90%' : 90,
@@ -47,14 +45,14 @@ export const TextFieldStyles = (theme: Theme, pos?: string): SxProps<Theme> => (
         mt: 3,
     },
     '& .MuiFormLabel-root': {
-        fontFamily: 'Open Sans'
-    }
+        fontFamily: 'Open Sans',
+    },
 });
 
 export const VerifyTextStyles = (theme: Theme): SxProps<Theme> => ({
     fontFamily: 'Open Sans',
     letterSpacing: '0.25px',
-    marginBottom: '32px'
+    marginBottom: '32px',
 });
 export const ListDividerStyles = (theme: Theme): SxProps<Theme> => ({
     m: `4px -13px`,
@@ -70,13 +68,12 @@ export const NewOrgDivider = (theme: Theme): SxProps<Theme> => ({
     },
 });
 
-
 export const StateInputField = (theme: Theme): SxProps<Theme> => ({
     width: '48%',
-     margin: "24px 10px 0px 0px",
-     '& .MuiFormLabel-root': {
-        fontFamily: 'Open Sans'
-    }
+    margin: '24px 10px 0px 0px',
+    '& .MuiFormLabel-root': {
+        fontFamily: 'Open Sans',
+    },
 });
 
 export const ReturnButtonStyles = (): SxProps<Theme> => ({
@@ -93,7 +90,7 @@ export const ReturnButtonStyles = (): SxProps<Theme> => ({
     flexGrow: 0,
     '& .Mui-disabled': {
         backgroundColor: '#e0eef8',
-        color: '#80bde0'
+        color: '#80bde0',
     },
-    height: '36px'
+    height: '36px',
 });

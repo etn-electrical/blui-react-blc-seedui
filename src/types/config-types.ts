@@ -4,4 +4,4 @@ export type Config = {
     USE_CUSTOM_EMAIL_TEMPLATE: boolean;
     ROLES: string;
     SERVICES_API: string;
-}
+};

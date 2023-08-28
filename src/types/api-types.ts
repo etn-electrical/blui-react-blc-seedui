@@ -15,19 +15,19 @@ export type BaseHttpResponse<T> = {
 
 export type HttpRequestParams<TBody = unknown> =
     | {
-        method: 'GET';
-    }
+          method: 'GET';
+      }
     | {
-        method: 'DELETE';
-    }
+          method: 'DELETE';
+      }
     | {
-        method: 'POST';
-        body: TBody;
-    }
+          method: 'POST';
+          body: TBody;
+      }
     | {
-        method: 'PUT';
-        body: TBody;
-    };
+          method: 'PUT';
+          body: TBody;
+      };
 
 export type HttpRequestBase = {
     resource: string;
@@ -35,7 +35,7 @@ export type HttpRequestBase = {
 
 export type ApiUrl = {
     baseUrl: string;
-}
+};
 
 export type HttpRequestOptions = {
     responseType?: 'text' | 'json';
