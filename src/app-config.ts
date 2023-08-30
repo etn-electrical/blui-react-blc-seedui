@@ -16,10 +16,10 @@ export const appConfig = {
 };
 
 export const oktaConfig = {
-    refresh_token_scope_name: '',
+    refresh_token_scope_name: '',           // eslint-disable-line
     scope: 'openid',
     state: 'anything',
-    grant_type: 'authorization_code',
-    code_challenge_method: 'S256',
-    response_type: 'code',
+    grant_type: 'authorization_code',       // eslint-disable-line
+    code_challenge_method: 'S256',          // eslint-disable-line
+    response_type: 'code',                  // eslint-disable-line
 };

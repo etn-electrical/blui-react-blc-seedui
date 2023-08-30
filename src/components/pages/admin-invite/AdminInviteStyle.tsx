@@ -202,6 +202,13 @@ export const CopyAccessModalStyle = (theme: Theme): SxProps<Theme> => ({
         fontWeight: '600',
         textTransform: 'none',
     },
+    '& .MuiDialogActions-spacing': {
+        padding: '0px'
+    },
+    '& .MuiFormHelperText-root': {
+        position: 'absolute',
+        top: '57px'
+    }
 });
 
 export const SuccessContainerStyles = (theme: Theme): SxProps<Theme> => ({

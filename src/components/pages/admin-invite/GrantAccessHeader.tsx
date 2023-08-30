@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { RoleAccessType } from '../../../types/admininvite-types';
 import { SearchInputStyle, SearchCancelIconStyle, SearchIconStyle } from './AdminInviteStyle';
 
 export const CopyMenu = ['My Access', "Someone Else's Access"];
@@ -18,12 +19,14 @@ type GrantAccessHeaderProps = {
     setCopyAccessModal: (open: boolean) => void;
     setCopyAccessType: (accessType: string) => void;
     setSearchString: (searchstring: string) => void;
+    visibleData: RoleAccessType;
 };
 
 export const GrantAccessHeader: React.FC<React.PropsWithChildren<GrantAccessHeaderProps>> = (
     props: GrantAccessHeaderProps
 ) => {
-    const { copyUserAccess, setCopyAccessModal, setCopyAccessType, searchString, setSearchString } = props;
+    const { copyUserAccess, setCopyAccessModal, setCopyAccessType, searchString, setSearchString, visibleData } = props;
+    const { orgnizationData = [] } = visibleData;
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isSearch, setIsSearch] = useState(false);
 
@@ -46,7 +49,7 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<GrantAccessHead
             <Box sx={{ marginBottom: '10px', display: 'flex' }}>
                 {!isSearch && (
                     <>
-                        <Button variant="outlined" onClick={handleClick} endIcon={<ArrowDropDownIcon />}>
+                        <Button disabled={!orgnizationData.length} variant="outlined" onClick={handleClick} endIcon={<ArrowDropDownIcon />}>
                             Copy From...
                         </Button>
                         <Menu

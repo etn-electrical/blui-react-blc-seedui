@@ -2,6 +2,7 @@ import { EMAIL_REGEX } from '../constants/registration-constants';
 import { UserRoles as UserRolesT } from '../context/AuthContextProvider/types';
 import { RegistrationResponseSites } from '../types/registration-types';
 import { country, state } from '../constants/country-state';
+import { CountryType, StateType } from '../types/selfinvite-types';
 
 export type RoleSiteCollectionRessponseType = {
     [key: string]: string[];
@@ -28,14 +29,14 @@ export const codeVerifier = (): string => {
     return Array.from(array, dec2hex).join('');
 };
 
-function sha256(plain: any) {
+const sha256 = (plain: any): Promise<ArrayBuffer> => {
     // returns promise ArrayBuffer
     const encoder = new TextEncoder();
     const data = encoder.encode(plain);
     return window.crypto.subtle.digest('SHA-256', data);
 }
 
-function base64urlencode(a: any) {
+const base64urlencode = (a: ArrayBuffer): string => {
     let str = '';
     const bytes = new Uint8Array(a);
     const len = bytes.byteLength;
@@ -45,15 +46,15 @@ function base64urlencode(a: any) {
     return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-export const codeChallenge = async (v: any) => {
+export const codeChallenge = async (v: string): Promise<string> => {
     const hashed = await sha256(v);
     const base64encoded = base64urlencode(hashed);
     return base64encoded;
 };
 
-export const getAllCountries = () => country;
+export const getAllCountries = (): CountryType[] => country;
 
-export const getStatesOfCountry = (countryCode = '') => {
+export const getStatesOfCountry = (countryCode = ''): StateType[] => {
     if (!countryCode) return [];
     const states = state.filter((value) => value.countryCode === countryCode);
     return states.sort((a, b) => {

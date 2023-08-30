@@ -13,3 +13,8 @@ export type RememberMeType = {
     rememberMe: boolean;
     email: string;
 };
+
+export type CodeVerifierType = {
+    codeVerifier: string;
+    codeChallenge: string;
+};

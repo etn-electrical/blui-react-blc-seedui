@@ -3,7 +3,9 @@ export type LoginUserType = {
     response?: {
         token?: string;
         adminRoleId?: string;
-        id_token?: string;
+        id_token?: string;      // eslint-disable-line
+        sessionToken?: string;
+        access_token?: string;  // eslint-disable-line
     };
 };
 

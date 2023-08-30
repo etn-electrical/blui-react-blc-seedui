@@ -31,7 +31,7 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<AdminInviteSuc
                     title={'Invitation Sent!'}
                     description={`An email invitation has been sent to ${
                         email.length > 1 ? `${email.length} users` : `${email.join(',')} user`
-                    }, This link will be valid for 24 hours.`}
+                    }. The link will be valid for 24 hours.`}
                     sx={{ minHeight: '75%' }}
                 />
 
@@ -55,6 +55,7 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<AdminInviteSuc
                         color="primary"
                         data-testid="nextAction"
                         disableElevation
+                        onClick={() => (window.location.href = '/dashboard')}
                         sx={DialogButtonStyles()}
                     >
                         {' '}

@@ -110,7 +110,7 @@ export const GrantAccess: React.FC<React.PropsWithChildren<GrantAccessPropsTypes
         copyAccessData.map((data: CopyAccessTypes) => {
             if (data.roleName === 'AdopterAdmin') {
                 searchDataList.map((site: AccessRoleTypes) => {
-                    roleSelectionProcess(data.roleName, site, siteList, locList, orgList);
+                    roleSelectionProcess('Admin', site, siteList, locList, orgList);
                 });
             } else {
                 const findSite = searchDataList.find((site: AccessRoleTypes) => site.id === data.siteId);
@@ -145,6 +145,7 @@ export const GrantAccess: React.FC<React.PropsWithChildren<GrantAccessPropsTypes
     const copyUserAccess = async (myAccess?: boolean) => {
         const { email } = LocalStorage.getRememberMe();
         setLoading(true);
+        setCopyAccessModal(false);
         const copyAccess: CopyAccessTypes[] | CopyAccessResponseType = await getAccessByEmail({
             adopterId,
             token,
@@ -152,10 +153,12 @@ export const GrantAccess: React.FC<React.PropsWithChildren<GrantAccessPropsTypes
         });
         if (copyAccess.length) {
             roleSelectionCopy(copyAccess);
-            setCopyAccessModal(false);
             setRolesChanged(false);
         }
-        if ('errorCode' in copyAccess && copyAccess.errorCode === 404) setCopyErrorMessage('Invalid email address');
+        if ('errorCode' in copyAccess && copyAccess.errorCode === 404) {
+            setCopyErrorMessage('User not found.');
+            setCopyAccessModal(true);
+        }
         setLoading(false);
     };
 
@@ -254,6 +257,7 @@ export const GrantAccess: React.FC<React.PropsWithChildren<GrantAccessPropsTypes
 
                     <Divider sx={FullDividerStyles(theme)} />
                     <GrantAccessHeader
+                        visibleData={visibleData}
                         searchString={searchString}
                         setSearchString={setSearchString}
                         setCopyAccessType={setCopyAccessType}

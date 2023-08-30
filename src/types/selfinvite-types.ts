@@ -70,3 +70,17 @@ export type SelfInviteSuccessProps = {
     siteName: string;
     roleName: string[];
 };
+
+export type CountryType = {
+    name: string;
+    isoCode: string;
+    flag: string;
+    phonecode: string;
+    currency: string;
+}
+
+export type StateType = {
+    name: string;
+    isoCode: string;
+    countryCode: string;
+}

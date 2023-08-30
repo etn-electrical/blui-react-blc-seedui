@@ -13,18 +13,17 @@ export const loginUser = async (body: LoginRequestType): Promise<LoginUserType> 
     return res;
 };
 
-export const oktaLoginUser = async (body: LoginOktaRequestType) => {
+export const oktaLoginUser = async (body: LoginOktaRequestType): Promise<LoginUserType> => {
     const res = await HttpRequest.post({ resource: `${config.oktaUrl}/api/v1/authn`, body });
-    return await res;
+    return res;
 };
 
-export const tokenGenerator = async (data: LoginOktaTokenGeneratorType) => {
-    const { grant_type } = oktaConfig;
+export const tokenGenerator = async (data: LoginOktaTokenGeneratorType): Promise<LoginUserType> => {
     const { code, redirectUri, clientid, codeVerifier } = data;
     const res = await HttpRequest.post({
-        resource: `${config.oktaUrl}/oauth2/aus3x5jojewaRZEnQ1d7/v1/token?grant_type=${grant_type}&code=${code}&redirect_uri=${redirectUri}&code_verifier=${codeVerifier}&client_id=${clientid}`,
+        resource: `${config.oktaUrl}/oauth2/aus3x5jojewaRZEnQ1d7/v1/token?grant_type=${oktaConfig.grant_type}&code=${code}&redirect_uri=${redirectUri}&code_verifier=${codeVerifier}&client_id=${clientid}`,
         body: {},
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
-    return await res;
+    return res;
 };

@@ -73,6 +73,13 @@ export const ToggleActionComponent = memo(
         );
     },
     (prevProps, nextProps) => {
-        return prevProps.data.roleAccess === nextProps.data.roleAccess;
+        if (prevProps.data.roleAccess !== nextProps.data.roleAccess) {
+            return false;
+        } else if (nextProps.parentOpt && prevProps.parentOpt.roleAccess !== nextProps.parentOpt.roleAccess) {
+            return false;
+        } else if (nextProps.searchString && prevProps.data.name !== nextProps.data.name) {
+            return false;
+        }
+        return true;
     }
 );
