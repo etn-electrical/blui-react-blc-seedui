@@ -1,4 +1,5 @@
 import { HttpResponse, HttpRequestParams, HttpRequestBase, HttpRequestOptions } from '../types/api-types';
+import { config } from '../app-config';
 
 const bearerToken = (token: string): string => (token ? `Bearer ${token}` : '');
 const request = async <TResponse = unknown>(
@@ -10,8 +11,8 @@ const request = async <TResponse = unknown>(
             method: args.method,
             headers: {
                 ...('body' in args ? { 'Content-Type': 'application/json' } : {}),
-                'claim-appid': '0oa6c6ymssh6xpgS81d7',
-                'api-key': 'euJMkV8aG2eyWbubPX1rAT6Gczm1vj9p',
+                'claim-appid': config.claimAppid,
+                'api-key': config.apiKey,
                 Authorization: bearerToken(args.token),
                 ...args.headers,
             },

@@ -34,7 +34,7 @@ const sha256 = (plain: any): Promise<ArrayBuffer> => {
     const encoder = new TextEncoder();
     const data = encoder.encode(plain);
     return window.crypto.subtle.digest('SHA-256', data);
-}
+};
 
 const base64urlencode = (a: ArrayBuffer): string => {
     let str = '';
@@ -44,7 +44,7 @@ const base64urlencode = (a: ArrayBuffer): string => {
         str += String.fromCharCode(bytes[i]);
     }
     return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
+};
 
 export const codeChallenge = async (v: string): Promise<string> => {
     const hashed = await sha256(v);

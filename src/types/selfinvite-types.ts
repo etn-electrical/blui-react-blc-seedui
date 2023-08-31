@@ -77,10 +77,10 @@ export type CountryType = {
     flag: string;
     phonecode: string;
     currency: string;
-}
+};
 
 export type StateType = {
     name: string;
     isoCode: string;
     countryCode: string;
-}
+};

@@ -40,6 +40,7 @@ export const AdminInviteSuccess: React.FC<React.PropsWithChildren<AdminInviteSuc
                     <Button
                         variant="outlined"
                         color="primary"
+                        data-testid="nextActionInviteMore"
                         onClick={(): void => {
                             setEmail([]);
                             advancePage(-2);

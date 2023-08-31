@@ -49,7 +49,12 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<GrantAccessHead
             <Box sx={{ marginBottom: '10px', display: 'flex' }}>
                 {!isSearch && (
                     <>
-                        <Button disabled={!orgnizationData.length} variant="outlined" onClick={handleClick} endIcon={<ArrowDropDownIcon />}>
+                        <Button
+                            disabled={!orgnizationData.length}
+                            variant="outlined"
+                            onClick={handleClick}
+                            endIcon={<ArrowDropDownIcon />}
+                        >
                             Copy From...
                         </Button>
                         <Menu
@@ -60,7 +65,9 @@ export const GrantAccessHeader: React.FC<React.PropsWithChildren<GrantAccessHead
                             MenuListProps={{ 'aria-labelledby': 'basic-button' }}
                         >
                             {CopyMenu.map((option, index) => (
-                                <MenuItem onClick={() => onMenuSelect(option)} key={index}>{option}</MenuItem>
+                                <MenuItem onClick={() => onMenuSelect(option)} key={index}>
+                                    {option}
+                                </MenuItem>
                             ))}
                         </Menu>
                     </>

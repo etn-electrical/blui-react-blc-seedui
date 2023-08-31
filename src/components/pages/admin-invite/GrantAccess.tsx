@@ -364,7 +364,7 @@ export const GrantAccess: React.FC<React.PropsWithChildren<GrantAccessPropsTypes
                     <Button
                         variant="contained"
                         color="primary"
-                        data-testid="nextAction"
+                        data-testid="nextActionInvite"
                         disableElevation
                         disabled={!isInviteEnabled}
                         onClick={(): void =>

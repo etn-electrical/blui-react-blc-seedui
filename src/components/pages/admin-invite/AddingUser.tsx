@@ -111,6 +111,7 @@ export const AddingUser: React.FC<React.PropsWithChildren<AddingUserPropsType>> 
                                             },
                                         }}
                                         value={emailInput}
+                                        data-testid="email"
                                         variant="filled"
                                         label="Email Address"
                                         onBlur={() => {

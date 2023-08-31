@@ -1,8 +1,14 @@
 import React from 'react';
 import 'regenerator-runtime/runtime';
-import { getAdminInviteSite, postAdminInvite, postAdminUserRegister } from '../api/admin-invite-register';
+import {
+    getAdminInviteSite,
+    postAdminInvite,
+    postAdminUserRegister,
+    getOrgList,
+    getAccessByEmail,
+} from '../api/admin-invite-register';
 import { postSelfInvite, postSelfUserRegister } from '../api/self-user-register';
-import { loginUser } from '../api/login';
+import { loginUser, oktaLoginUser, tokenGenerator } from '../api/login';
 
 describe('Admin Invite Api', () => {
     it('validate Site Api', async () => {
@@ -16,6 +22,14 @@ describe('Admin Invite Api', () => {
     it('validate Admin Register Api', async () => {
         const res = await postAdminUserRegister({} as any);
         expect(res).toMatchObject({ status: 400 });
+    });
+    it('validate OrgList Api', async () => {
+        const res = await getOrgList({ adopterId: 'adsdadads', token: 'adasd879' });
+        expect(res).toMatchObject([]);
+    });
+    it('validate getAccessByAdmin Api', async () => {
+        const res = await getAccessByEmail({ adopterId: 'sasdadads', token: 'adasd879', email: 'test@gmail.com' });
+        expect(res).toMatchObject({ ErrorCode: 400 });
     });
 });
 
@@ -40,5 +54,25 @@ describe('Login Api', () => {
             applicationId: '0oa6c6ymssh6xpgS81d7',
         } as any);
         expect(res).toMatchObject({ status: 400 });
+    });
+    it('validate OktaLogin Api', async () => {
+        const res = await oktaLoginUser({
+            username: 'test@gmail.com',
+            password: 'test@123',
+            options: {
+                multiOptionalFactorEnroll: true,
+                warnBeforePasswordExpired: true,
+            },
+        } as any);
+        expect(res).toMatchObject({ status: 0 });
+    });
+    it('validate Generator Api', async () => {
+        const res = await tokenGenerator({
+            code: 'asdasda8d6asds',
+            redirectUri: 'http://test.com',
+            clientid: 'aasd9a87sd98as79d',
+            codeVerifier: 'asdas8d7a98sd79',
+        } as any);
+        expect(res).toMatchObject({ status: 0 });
     });
 });

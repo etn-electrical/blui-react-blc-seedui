@@ -6,9 +6,10 @@ const getAuthTocken = (): UserDataType => {
     return userData;
 };
 
-const setAuthTocken = (token: string, roleId: string, id_token: string): void => {      // eslint-disable-line
+// eslint-disable-next-line
+const setAuthTocken = (token: string, roleId: string, id_token: string): void => {
     const expirationString = addMinutes(new Date(), 55);
-    const userData = { expirationString, token, roleId, id_token };                     // eslint-disable-line
+    const userData = { expirationString, token, roleId, id_token }; // eslint-disable-line
     window.localStorage.setItem('user_data', JSON.stringify(userData));
 };
 
@@ -30,12 +31,12 @@ const clearAuthToken = (): void => {
 const setCodeVerifier = (codeVerifier: string, codeChallenge: string): void => {
     const verifier = { codeVerifier, codeChallenge };
     window.localStorage.setItem('code_verifier', JSON.stringify(verifier));
-}
+};
 
 const getCodeVerifier = (): CodeVerifierType => {
     const verifier = JSON.parse(window.localStorage.getItem('code_verifier') || '{}');
     return verifier;
-}
+};
 
 export const LocalStorage = {
     setAuthTocken,

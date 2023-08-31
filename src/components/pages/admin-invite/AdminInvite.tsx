@@ -27,7 +27,6 @@ export const AdminInvite: React.FC = () => {
     const { adopterId, adopterApplicationName } = authUIConfig;
     const [currentPage, setCurrentPage] = useState(0);
     const [email, setEmail] = useState([]);
-    const [orgDetailsList, setOrgDetailsList] = useState<any>();
     const [accessList, setAccessList] = useState<AccessListTypes>({ orgList: [], locList: {}, siteList: {} });
     const [inviteSuccess, setInviteSuccess] = useState<{ message: string }>({ message: '' });
     const url = new URL(window.location.href);
@@ -42,7 +41,7 @@ export const AdminInvite: React.FC = () => {
         getSiteList();
     }, []);
 
-    useEffect(() => {
+    const processOrgList = (orgDetailsList: any) => {
         const orgList: AccessRoleTypes[] = [];
         const locList: LocationTypes = {};
         const siteList: SiteTypes = {};
@@ -64,11 +63,11 @@ export const AdminInvite: React.FC = () => {
             });
             setAccessList({ orgList, locList, siteList });
         }
-    }, [orgDetailsList]);
+    };
 
     const getSiteList = async () => {
         const siteList: LocationSiteProps[] = await getOrgList({ adopterId, token });
-        setOrgDetailsList(siteList.slice(0, 100));
+        processOrgList(siteList.slice(0, 100));
     };
 
     const inviteUser = async (data: InviteUserPropType) => {

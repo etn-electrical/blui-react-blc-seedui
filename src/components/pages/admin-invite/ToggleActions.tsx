@@ -38,6 +38,7 @@ export const ToggleActionComponent = memo(
         const toggleButton = (option: { value: string; label: string }, index: number) => {
             return (
                 <ToggleButton
+                    data-testid={`${data.name}_${option.value}`}
                     key={index}
                     disabled={isRoleRestrict && RoleOptions.indexOf(parentSelection.roleAccess) > index}
                     value={option.value}
